@@ -9,12 +9,10 @@ variable "azuread_app_name" {
 
 variable "resourcegroup_name" {
   type = string
-  default = "aro-agabriel"
 }
 
 variable "cluster_name" {
   type = string
-  default = "aro-"
 }
 
 variable "vnet_name" {
