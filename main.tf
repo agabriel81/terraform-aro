@@ -33,7 +33,7 @@ resource "azurerm_role_assignment" "role_network2" {
 
 resource "azurerm_resource_group" "aro_rg" {
   name     = var.resourcegroup_name
-  location = "Germany West Central"
+  location = var.location
 }
 
 resource "azurerm_virtual_network" "aro_vnet" {
