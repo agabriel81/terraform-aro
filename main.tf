@@ -2,16 +2,19 @@ data "azurerm_client_config" "azurerm_client" {}
 
 data "azuread_client_config" "azuread_client" {}
 
-resource "azuread_application" "azuread_app" {
-  display_name = "ARO Azure AD Application"
+resource "azuread_application_registration" "azuread_app" {
+  display_name = "ARO-agabriel"
 }
 
 resource "azuread_service_principal" "azuread_sp" {
-  client_id = azuread_application.azuread_app.client_id
+  client_id = azuread_application_registration.azuread_app.client_id
+  app_role_assignment_required = false
+  owners                       = [data.azuread_client_config.azuread_client.object_id]
 }
 
 resource "azuread_service_principal_password" "azuread_sp_pwd" {
   service_principal_id = azuread_service_principal.azuread_sp.object_id
+  end_date             = "2025-12-31T23:59:59Z"     
 }
 
 data "azuread_service_principal" "redhatopenshift" {
@@ -96,7 +99,7 @@ resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
   }
 
   service_principal {
-    client_id     = azuread_application.azuread_app.client_id
+    client_id     = azuread_application_registration.azuread_app.client_id
     client_secret = azuread_service_principal_password.azuread_sp_pwd.value
   }
 
@@ -109,3 +112,4 @@ resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
 output "console_url" {
   value = azurerm_redhat_openshift_cluster.aro-cluster.console_url
 }
+

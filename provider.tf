@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "=3.102.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "=2.48.0"
+    }
   }
 }
 
@@ -15,3 +19,6 @@ provider "azurerm" {
   features {}
 }
 
+provider "azuread" {
+  tenant_id = "64dc69e4-d083-49fc-9569-ebece1dd1408"
+}
