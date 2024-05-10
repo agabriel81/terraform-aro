@@ -1,60 +1,60 @@
-- apiVersion: maistra.io/v2
-  kind: ServiceMeshControlPlane
-  metadata:
-    annotations:
-      argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-      argocd.argoproj.io/sync-wave: "4"
-    finalizers:
-    - maistra.io/istio-operator
-    name: basic
-    namespace: istio-system
-  spec:
-    addons:
-      grafana:
-        enabled: true
-      jaeger:
-        install:
-          storage:
-            type: Memory
-      kiali:
-        enabled: true
-      prometheus:
-        enabled: true
-    gateways:
-      egress:
-        enabled: true
-      ingress:
-        enabled: true
-        runtime:
-          deployment:
-            autoScaling:
-              enabled: false
-            replicas: 3
-          pod:
-            affinity:
-              podAntiAffinity:
-                requiredDuringScheduling:
-                - key: app
-                  operator: In
-                  topologyKey: topology.kubernetes.io/zone
-                  values:
-                  - istio-ingressgateway
-        volumes:
-        - volume:
-            secret:
-              secretName: istio-ingressgateway-customer-certs
-          volumeMount:
-            mountPath: /etc/istio/customer-certs
-            name: customer-certs
-      openshiftRoute:
-        enabled: false
-    policy:
-      type: Istiod
-    profiles:
-    - default
-    telemetry:
-      type: Istiod
-    tracing:
-      sampling: 10000
-      type: Jaeger
-    version: v2.5
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "4"
+  finalizers:
+  - maistra.io/istio-operator
+  name: basic
+  namespace: istio-system
+spec:
+  addons:
+    grafana:
+      enabled: true
+    jaeger:
+      install:
+        storage:
+          type: Memory
+    kiali:
+      enabled: true
+    prometheus:
+      enabled: true
+  gateways:
+    egress:
+      enabled: true
+    ingress:
+      enabled: true
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: false
+          replicas: 3
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringScheduling:
+              - key: app
+                operator: In
+                topologyKey: topology.kubernetes.io/zone
+                values:
+                - istio-ingressgateway
+      volumes:
+      - volume:
+          secret:
+            secretName: istio-ingressgateway-customer-certs
+        volumeMount:
+          mountPath: /etc/istio/customer-certs
+          name: customer-certs
+    openshiftRoute:
+      enabled: false
+  policy:
+    type: Istiod
+  profiles:
+  - default
+  telemetry:
+    type: Istiod
+  tracing:
+    sampling: 10000
+    type: Jaeger
+  version: v2.5
