@@ -43,21 +43,21 @@ resource "azurerm_virtual_network" "aro_vnet" {
   name                = var.vnet_name
   address_space       = ["10.0.0.0/22"]
   location            = var.location
-  resource_group_name = var.resourcegroup_name
+  resource_group_name = azurerm_resource_group.aro_rg.name
 }
 
 resource "azurerm_subnet" "main_subnet" {
   name                 = "main-subnet"
-  resource_group_name  = var.resourcegroup_name
-  virtual_network_name = var.vnet_name
+  resource_group_name  = azurerm_resource_group.aro_rg.name
+  virtual_network_name = azurerm_virtual_network.aro_vnet.name
   address_prefixes     = ["10.0.0.0/23"]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
 }
 
 resource "azurerm_subnet" "worker_subnet" {
   name                 = var.worker_subnet_name
-  resource_group_name  = var.resourcegroup_name
-  virtual_network_name = var.vnet_name
+  resource_group_name  = azurerm_resource_group.aro_rg.name
+  virtual_network_name = azurerm_virtual_network.aro_vnet.name
   address_prefixes     = ["10.0.2.0/23"]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
 }
@@ -65,7 +65,7 @@ resource "azurerm_subnet" "worker_subnet" {
 resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
   name                = var.cluster_name
   location            = var.location
-  resource_group_name = var.resourcegroup_name
+  resource_group_name = azurerm_resource_group.aro_rg.name
 
   cluster_profile {
     domain = var.cluster_domain
