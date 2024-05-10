@@ -8,7 +8,7 @@ metadata:
 spec:
   finalizers:
     - kubernetes
-    ---
+---
 kind: Project
 apiVersion: project.openshift.io/v1
 metadata:
