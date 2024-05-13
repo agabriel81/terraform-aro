@@ -24,19 +24,19 @@ $ cd terraform-aro
 
 Start the Terraform process by passing few variables:
 ```
-$ export PULL_SECRET='{"auths":{"arosvc.azurecr.io....'
-$ export CLUSTER_DOMAIN=agabriel-ger
-$ export CLUSTER_VERSION=4.12.25
-$ export LOCATION=germanywestcentral
-$ export RG_NAME=aro-ger-agabriel
-$ export CLUSTER_NAME=aro-ger-cluster1
-$ export TM-ROUTE=agabriel-aro-tm.trafficmanager.net
+$ export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
+$ export TF_VAR_cluster_domain=agabriel-ger
+$ export TF_VAR_cluster_version=4.12.25
+$ export TF_VAR_location=germanywestcentral
+$ export TF_VAR_resourcegroup_name=aro-ger-agabriel
+$ export TF_VAR_cluster_name=aro-ger-cluster1
+$ export TF_VAR_tm_route=agabriel-aro-tm.trafficmanager.net
 ```
 ```
 $ terraform init
 $ terraform validate
-$ terraform plan --var 'pull_secret=${PULL_SECRET}' --var 'cluster_domain=${CLUSTER_DOMAIN}' --var 'cluster_version=${CLUSTER_VERSION}' --var 'location=${LOCATION}' --var 'resourcegroup_name=${RG_NAME}' --var 'cluster_name=${CLUSTER_NAME}' --var 'tm_route=${TM-ROUTE}'
-$ terraform apply --var 'pull_secret={"auths":{"arosvc.azurecr.io"...<your pull secret>' --var 'cluster_domain=agabriel-ger' --var 'cluster_version=4.12.25' --var 'location=germanywestcentral' --var 'resourcegroup_name=aro-ger-agabriel' --var 'cluster_name=aro-ger-cluster1'
+$ terraform plan 
+$ terraform apply 
 ```
 
 After completing the installation, retrieve ARO credentials, ARO console and ARO API URL:
