@@ -43,9 +43,9 @@ $ terraform apply
 After completing the installation, retrieve ARO credentials, ARO console and ARO API URL:
 
 ```
-$ az aro list-credentials --name ${CLUSTER_NAME} --resource-group ${RG_NAME}
-$ az aro show --name ${CLUSTER_NAME} --resource-group ${RG_NAME} --query "consoleProfile.url" -o tsv
-$ az aro show -g ${RG_NAME} -n ${CLUSTER_NAME} --query apiserverProfile.url -o tsv 
+$ az aro list-credentials --name ${TF_VAR_cluster_name} --resource-group ${TF_VAR_resourcegroup_name}
+$ az aro show --name ${TF_VAR_cluster_name} --resource-group ${TF_VAR_resourcegroup_name} --query "consoleProfile.url" -o tsv
+$ az aro show -g ${TF_VAR_resourcegroup_name} -n ${TF_VAR_cluster_name} --query apiserverProfile.url -o tsv 
 $ oc login <API URL> -u kubeadmin
 ```
 
@@ -57,6 +57,8 @@ This process requires `cluster-admin` permissions to the `openshift-gitops-argoc
 
 ```
 $ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
+```
+```
 $ cat <<EOF | oc apply -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -86,7 +88,9 @@ EOF
 
 The GitOps Application resources are configured with "sync-waves" to respect creation order but you can ajust the `retry` option on GitOps for achieving more consistency.
 
-The ServiceMesh control plane installation will fail but it's expected because it needs the custom Istio Gateway certificate which will be created in next steps.
+Access the OpenShift GitOps ArgoCD instance and manually sync the `mesh-cluster` Application.
+
+The ServiceMesh control plane installation will fail for the ServiceMesh IngressGateway but it's expected because it needs the custom Istio Gateway certificate which will be created in next steps.
 
 Create the CA Issuer for the `Cert-Manager` Operator, it will sign the end certificate for OpenShift ServiceMesh.
 
@@ -133,9 +137,18 @@ spec:
       name: envsubst
       env:
         - name: TM-ROUTE
-          value: $TM_ROUTE
+          value: $TF_VAR_tm_route
 EOF
 ```
+
+Access the OpenShift GitOps ArgoCD instance and sync the `mesh-workload` Application.
+
+The repository will configure a passthrough OpenShift Route for exposing our $TM_ROUTE/productpage endpoint, served by an Azure Traffic Manager component.
+
+The application should expose a certificate signed by our custom CA with a 2h duration.
+
+The certificate will be automatically renewed by OpenShift Cert-Manager Operator
+
 
 
 REFERENCE
