@@ -1,4 +1,4 @@
-# Terraforming a public Azure Red Hat OpenShift (ARO) plus GitOps ServiceMesh
+# Terraforming a public Azure Red Hat OpenShift (ARO), install OpenShift ServiceMesh using OpenShift GitOps and using a custom CA for ServiceMesh workload by Cert-Manager Operator
 
 Prerequisites and versions:
 
@@ -45,7 +45,11 @@ This process requires `cluster-admin` permissions to the `openshift-gitops-argoc
 
 ```
 $ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
+$ cat <<EOF | oc apply -f -
+#########
+```
 
+Create the CA Issuer for the `Cert-Manager` Operator, it will sign the certificate 
 
 
 
