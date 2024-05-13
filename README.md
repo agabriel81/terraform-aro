@@ -5,6 +5,7 @@ Prerequisites and versions:
 ```
 - Terraform v1.8.3
 - az (CLI): 2.60.0
+- oc (CLI): version depend on the cluster version
 ```
 
 Clone the repository and change to repo directory:
