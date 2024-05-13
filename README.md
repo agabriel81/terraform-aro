@@ -103,7 +103,31 @@ The OpenShift ServiceMesh Istio Gateway is already configured for mounting a cus
 And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application:
 
 ```
-$ oc apply -f mesh_gitops_workload/*
+$ cat <<EOF | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mesh-workload
+  namespace: openshift-gitops
+spec:
+  destination:
+    name: ''
+    namespace: 'bookinfo'
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: mesh_gitops_workload
+    repoURL: 'https://github.com/agabriel81/terraform-aro.git'
+    targetRevision: master
+  sources: []
+  project: default
+  syncPolicy:
+    retry:
+      limit: 5
+      backoff:
+        duration: 15s
+        maxDuration: 3m0s
+        factor: 2
+EOF
 ```
 
 

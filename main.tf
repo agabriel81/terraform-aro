@@ -109,6 +109,34 @@ resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
   ]
 }
 
+resource "azurerm_traffic_manager_profile" "aro-tm" {
+  name = "agabriel-aro-tm"
+  resource_group_name    = azurerm_resource_group.aro_rg.name
+  traffic_routing_method = "Priority"
+
+  dns_config {
+    relative_name = "agabriel-aro-tm"
+    ttl           = 100
+  }
+
+  monitor_config {
+    protocol                     = "HTTPS"
+    port                         = 443
+    path                         = "/productpage"
+    interval_in_seconds          = 30
+    timeout_in_seconds           = 9
+    tolerated_number_of_failures = 3
+  }
+}
+
+resource "azurerm_traffic_manager_external_endpoint" "aro-tm-endpoint" {
+  name                 = var.cluster_name
+  profile_id           = azurerm_traffic_manager_profile.aro-tm.id
+  always_serve_enabled = false
+  priority             = 1
+  target               = azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile.0.ip_address
+}
+
 output "console_url" {
   value = azurerm_redhat_openshift_cluster.aro-cluster.console_url
 }
