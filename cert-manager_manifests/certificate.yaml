@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: istio-ingressgateway-custom-certs
+  namespace: cert-manager
+spec:
+  isCA: false
+  commonName: 'site.example.com' 
+  secretName: istio-ingressgateway-custom-certs
+  dnsNames:
+  - "site.example.com" 
+  issuerRef:
+    name: ca-issuer
+    kind: Issuer
