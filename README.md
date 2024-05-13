@@ -93,7 +93,9 @@ Create a secret containing your custom CA and then the Cert-Manager resources. F
 ```
 $ oc -n cert-manager create secret generic ca-key-pair --from-file=tls.key=<CA key> --from-file=tls.crt=<CA certificate>
 $ oc create -f cert-manager_manifests/issuer.yaml
-$ oc create -f cert-manager_manifests/certificate.yaml
+$ cp -p cert-manager_manifests/certificate.yaml /tmp/certificate.yaml
+$ vi /tmp/certificate.yaml
+$ oc create -f /tmp/certificate.yaml
 ```
 
 The OpenShift ServiceMesh Istio Gateway is already configured for mounting a custom certificate and it's needed to restart the Istio Gateway pod to mount the newly created custom certificate, signed by your custom CA and saved into the secret `istio-ingressgateway-custom-certs`
