@@ -100,6 +100,11 @@ $ oc create -f /tmp/certificate.yaml
 
 The OpenShift ServiceMesh Istio Gateway is already configured for mounting a custom certificate and it's needed to restart the Istio Gateway pod to mount the newly created custom certificate, signed by your custom CA and saved into the secret `istio-ingressgateway-custom-certs`
 
+And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application:
+
+```
+$ oc apply -f mesh_gitops_workload/*
+```
 
 
 REFERENCE
