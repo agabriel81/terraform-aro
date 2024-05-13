@@ -7,6 +7,14 @@ Prerequisites and versions:
 - az (CLI): 2.60.0
 - oc (CLI): version depend on the cluster version
 ```
+```
+- ARO: 4.12
+- OpenShift GitOps: 1.12
+- OpenShift Kiali:
+- OpenShift Jaeger:
+- OpenShift ServiceMesh:
+- OpenShift Cert-Manager: 
+```
 
 Clone the repository and change to repo directory:
 ```
@@ -42,6 +50,7 @@ $ oc login <API URL> -u kubeadmin -p <password>
 Access the ARO console and install the OpenShift GitOps using the official documentation [1] (version 1.12 at the time of writing).
 
 Create a GitOps application for installating the Cert-manager, Kiali, Jaeger and ServiceMesh Operators, with ServiceMeshControlPlane and ServiceMeshMemberRoll CRDs pointing the `mesh_gitops_cluster` directory of this repository. 
+
 This process requires `cluster-admin` permissions to the `openshift-gitops-argocd-application-controller` ServiceAccount:
 
 ```
@@ -84,6 +93,7 @@ $ oc create -f cert-manager_manifests/certificate.yaml
 ```
 
 The OpenShift ServiceMesh Istio Gateway is already configured for mounting a custom certificate and it's needed to restart the Istio Gateway pod to mount the newly created custom certificate, signed by your custom CA and saved into the secret `istio-ingressgateway-custom-certs`
+
 
 
 REFERENCE
