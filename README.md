@@ -47,7 +47,26 @@ This process requires `cluster-admin` permissions to the `openshift-gitops-argoc
 ```
 $ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
 $ cat <<EOF | oc apply -f -
-#########
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mesh-cluster
+  namespace: openshift-gitops
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: mesh_gitops_cluster
+    repoURL: https://github.com/agabriel81/terraform-aro.git
+    targetRevision: master
+    directory:
+      recurse: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+EOF
 ```
 
 The GitOps Application resources are configured with "sync-waves" to respect creation order but you can ajust the `retry` option on GitOps for achieving more consistency.
