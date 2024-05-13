@@ -63,18 +63,22 @@ metadata:
   namespace: openshift-gitops
 spec:
   destination:
-    server: https://kubernetes.default.svc
-  project: default
+    name: ''
+    namespace: ''
+    server: 'https://kubernetes.default.svc'
   source:
     path: mesh_gitops_cluster
-    repoURL: https://github.com/agabriel81/terraform-aro.git
+    repoURL: 'https://github.com/agabriel81/terraform-aro.git'
     targetRevision: master
-    directory:
-      recurse: true
+  sources: []
+  project: default
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 15s
+        maxDuration: 3m0s
+        factor: 2
 EOF
 ```
 
