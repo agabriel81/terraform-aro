@@ -24,26 +24,27 @@ $ cd terraform-aro
 
 Start the Terraform process by passing few variables:
 ```
-- pull_secret (Red Hat pull secret)
-- cluster_domain
-- cluster_version
-- location (Azure region)
-- resourcegroup_name (Azure ResourceGroup)
-- cluster_name
+$ export PULL_SECRET='{"auths":{"arosvc.azurecr.io....'
+$ export CLUSTER_DOMAIN=agabriel-ger
+$ export CLUSTER_VERSION=4.12.25
+$ export LOCATION=germanywestcentral
+$ export RG_NAME=aro-ger-agabriel
+$ export CLUSTER_NAME=aro-ger-cluster1
+$ export TM-ROUTE=agabriel-aro-tm.trafficmanager.net
 ```
 ```
 $ terraform init
 $ terraform validate
-$ terraform plan --var 'pull_secret={"auths":{"arosvc.azurecr.io"...<your pull secret>' --var 'cluster_domain=<your cluster domain>' --var 'cluster_version=<your cluster version>' --var 'location=<your cluster location>' --var 'resourcegroup_name=<your cluster resource group>' --var 'cluster_name=<your cluster name>'
+$ terraform plan --var 'pull_secret=${PULL_SECRET}' --var 'cluster_domain=${CLUSTER_DOMAIN}' --var 'cluster_version=${CLUSTER_VERSION}' --var 'location=${LOCATION}' --var 'resourcegroup_name=${RG_NAME}' --var 'cluster_name=${CLUSTER_NAME}' --var 'tm_route=${TM-ROUTE}'
 $ terraform apply --var 'pull_secret={"auths":{"arosvc.azurecr.io"...<your pull secret>' --var 'cluster_domain=agabriel-ger' --var 'cluster_version=4.12.25' --var 'location=germanywestcentral' --var 'resourcegroup_name=aro-ger-agabriel' --var 'cluster_name=aro-ger-cluster1'
 ```
 
 After completing the installation, retrieve ARO credentials, ARO console and ARO API URL:
 
 ```
-$ az aro list-credentials --name <cluster_name> --resource-group <resourcegroup_name>
-$ az aro show --name <cluster_name> --resource-group <resourcegroup_name> --query "consoleProfile.url" -o tsv
-$ az aro show -g <resourcegroup_name -n <cluster_name> --query apiserverProfile.url -o tsv 
+$ az aro list-credentials --name ${CLUSTER_NAME} --resource-group ${RG_NAME}
+$ az aro show --name ${CLUSTER_NAME} --resource-group ${RG_NAME} --query "consoleProfile.url" -o tsv
+$ az aro show -g ${RG_NAME} -n ${CLUSTER_NAME} --query apiserverProfile.url -o tsv 
 $ oc login <API URL> -u kubeadmin
 ```
 
@@ -127,6 +128,11 @@ spec:
         duration: 15s
         maxDuration: 3m0s
         factor: 2
+    plugin:
+      name: envsubst
+      env:
+        - name: TM-ROUTE
+          value: $TM_ROUTE
 EOF
 ```
 
