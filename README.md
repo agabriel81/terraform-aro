@@ -9,11 +9,11 @@ Prerequisites and versions:
 ```
 ```
 - ARO: 4.12
-- OpenShift GitOps: 1.12.2
-- OpenShift Kiali:
-- OpenShift Jaeger:
-- OpenShift ServiceMesh:
-- OpenShift Cert-Manager: 
+- OpenShift GitOps: 1.12
+- OpenShift Kiali: 1.73
+- OpenShift Jaeger: 1.53
+- OpenShift ServiceMesh: 2.5
+- OpenShift Cert-Manager: 1.12
 ```
 
 Clone the repository and change to repo directory:

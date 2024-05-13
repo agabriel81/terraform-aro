@@ -43,7 +43,7 @@ metadata:
   labels:
     operators.coreos.com/jaeger-product.openshift-distributed-tracing: ""
   name: jaeger-product
-  namespace: openshift-distributed-tracing
+  namespace: openshift-operators
 spec:
   channel: stable
   installPlanApproval: Automatic
