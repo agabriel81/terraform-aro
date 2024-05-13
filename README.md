@@ -106,4 +106,3 @@ REFERENCE
 
 https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/redhat_openshift_cluster
 
-
