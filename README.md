@@ -124,6 +124,11 @@ spec:
     path: mesh_gitops_workload
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
     targetRevision: master
+    plugin:
+      name: envsubst
+      env:
+        - name: TM_ROUTE
+          value: \$TF_VAR_tm_route
   sources: []
   project: default
   syncPolicy:
@@ -133,11 +138,6 @@ spec:
         duration: 15s
         maxDuration: 3m0s
         factor: 2
-    plugin:
-      name: envsubst
-      env:
-        - name: TM_ROUTE
-          value: $TF_VAR_tm_route
 EOF
 ```
 
