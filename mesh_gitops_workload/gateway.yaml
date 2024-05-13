@@ -8,15 +8,15 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - agabriel-tm-test.trafficmanager.net
+    - agabriel-aro-tm.trafficmanager.net
     port:
       name: https
       number: 443
       protocol: HTTPS
     tls:
       mode: SIMPLE
-      privateKey: /etc/istio/customer-certs/tls.key
-      serverCertificate: /etc/istio/customer-certs/tls.crt
+      privateKey: /etc/istio/custom-certs/tls.key
+      serverCertificate: /etc/istio/custom-certs/tls.crt
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway

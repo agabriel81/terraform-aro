@@ -42,10 +42,10 @@ spec:
       volumes:
       - volume:
           secret:
-            secretName: istio-ingressgateway-customer-certs
+            secretName: istio-ingressgateway-custo-certs
         volumeMount:
-          mountPath: /etc/istio/customer-certs
-          name: customer-certs
+          mountPath: /etc/istio/custom-certs
+          name: custom-certs
     openshiftRoute:
       enabled: false
   policy:
