@@ -7,7 +7,7 @@ spec:
   gateways:
   - bookinfo-gateway
   hosts:
-  - agabriel-tm-test.trafficmanager.net
+  - agabriel-aro-tm.trafficmanager.net
   http:
   - match:
     - uri:
