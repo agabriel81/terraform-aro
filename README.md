@@ -50,8 +50,11 @@ $ cat <<EOF | oc apply -f -
 ```
 
 The GitOps Application resources are configured with "sync-waves" to respect creation order but you can ajust the `retry` option on GitOps for achieving more consistency.
+
 The ServiceMesh control plane installation will fail but it's expected because it needs the custom Istio Gateway certificate which will be created in next steps.
+
 Create the CA Issuer for the `Cert-Manager` Operator, it will sign the end certificate for OpenShift ServiceMesh.
+
 Create a secret containing your custom CA and then the Cert-Manager resources. Fill the resources based on your environment:
 
 ```
