@@ -44,7 +44,7 @@ After completing the installation, retrieve ARO credentials, ARO console and ARO
 $ az aro list-credentials --name <cluster_name> --resource-group <resourcegroup_name>
 $ az aro show --name <cluster_name> --resource-group <resourcegroup_name> --query "consoleProfile.url" -o tsv
 $ az aro show -g <resourcegroup_name -n <cluster_name> --query apiserverProfile.url -o tsv 
-$ oc login <API URL> -u kubeadmin -p <password>
+$ oc login <API URL> -u kubeadmin
 ```
 
 Access the ARO console and install the OpenShift GitOps using the official documentation [1] (version 1.12 at the time of writing).
