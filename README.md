@@ -1,4 +1,4 @@
-# Terraforming a public Azure Red Hat OpenShift (ARO), install OpenShift ServiceMesh using OpenShift GitOps and using a custom CA for ServiceMesh workload by Cert-Manager Operator
+# Terraforming a public Azure Red Hat OpenShift (ARO) cluster, install OpenShift ServiceMesh using OpenShift GitOps with custom CA for ServiceMesh workload by Cert-Manager Operator
 
 Prerequisites and versions:
 
@@ -25,6 +25,7 @@ $ cd terraform-aro
 Start the Terraform process by passing few variables:
 ```
 $ export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
+$ export TF_VAR_azure_app_name=agabriel-app-aro-ita
 $ export TF_VAR_cluster_domain=agabriel-ger
 $ export TF_VAR_cluster_version=4.12.25
 $ export TF_VAR_location=germanywestcentral
@@ -142,4 +143,8 @@ REFERENCE
 [1] https://docs.openshift.com/gitops/1.12/understanding_openshift_gitops/about-redhat-openshift-gitops.html
 
 https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/redhat_openshift_cluster
+
+https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/traffic_manager_azure_endpoint
+
+https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/traffic_manager_external_endpoint
 

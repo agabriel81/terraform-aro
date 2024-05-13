@@ -2,9 +2,8 @@ variable "location" {
   type = string
 }
 
-variable "azuread_app_name" {
+variable "azure_app_name" {
   type = string
-  default = "agabriel-aro-app"
 }
 
 variable "resourcegroup_name" {

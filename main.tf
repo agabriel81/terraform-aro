@@ -3,7 +3,7 @@ data "azurerm_client_config" "azurerm_client" {}
 data "azuread_client_config" "azuread_client" {}
 
 resource "azuread_application_registration" "azuread_app" {
-  display_name = "ARO-agabriel"
+  display_name = var.azure_app_name
 }
 
 resource "azuread_service_principal" "azuread_sp" {
