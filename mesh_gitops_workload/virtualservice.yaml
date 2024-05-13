@@ -7,7 +7,7 @@ spec:
   gateways:
   - bookinfo-gateway
   hosts:
-  - $TM-ROUTE
+  - $TM_ROUTE
   http:
   - match:
     - uri:

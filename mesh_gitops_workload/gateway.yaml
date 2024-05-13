@@ -8,7 +8,7 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - $TM-ROUTE
+    - $TM_ROUTE
     port:
       name: https
       number: 443

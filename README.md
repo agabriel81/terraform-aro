@@ -136,7 +136,7 @@ spec:
     plugin:
       name: envsubst
       env:
-        - name: TM-ROUTE
+        - name: TM_ROUTE
           value: $TF_VAR_tm_route
 EOF
 ```
