@@ -42,7 +42,7 @@ spec:
       volumes:
       - volume:
           secret:
-            secretName: istio-ingressgateway-custo-certs
+            secretName: istio-ingressgateway-custom-certs
         volumeMount:
           mountPath: /etc/istio/custom-certs
           name: custom-certs
