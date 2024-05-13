@@ -67,6 +67,8 @@ The OpenShift ServiceMesh Istio Gateway is already configured for mounting a cus
 
 
 REFERENCE
+
 [1] https://docs.openshift.com/gitops/1.12/understanding_openshift_gitops/about-redhat-openshift-gitops.html
+
 https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/redhat_openshift_cluster
 
