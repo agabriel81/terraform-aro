@@ -9,7 +9,7 @@ Prerequisites and versions:
 ```
 ```
 - ARO: 4.12
-- OpenShift GitOps: 1.12
+- OpenShift GitOps: 1.12.2
 - OpenShift Kiali:
 - OpenShift Jaeger:
 - OpenShift ServiceMesh:
