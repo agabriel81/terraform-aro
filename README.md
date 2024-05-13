@@ -49,8 +49,18 @@ $ cat <<EOF | oc apply -f -
 #########
 ```
 
-Create the CA Issuer for the `Cert-Manager` Operator, it will sign the certificate 
+The GitOps Application resources are configured with "sync-waves" to respect creation order but you can ajust the `retry` option on GitOps for achieving more consistency.
+The ServiceMesh control plane installation will fail but it's expected because it needs the custom Istio Gateway certificate which will be created in next steps.
+Create the CA Issuer for the `Cert-Manager` Operator, it will sign the end certificate for OpenShift ServiceMesh.
+Create a secret containing your custom CA and then the Cert-Manager resources. Fill the resources based on your environment:
 
+```
+$ oc -n cert-manager create secret generic ca-key-pair --from-file=tls.key=<CA key> --from-file=tls.crt=<CA certificate>
+$ oc create -f cert-manager_manifests/issuer.yaml
+$ oc create -f cert-manager_manifests/certificate.yaml
+```
+
+The OpenShift ServiceMesh Istio Gateway is already configured for mounting a custom certificate and it's needed to restart the Istio Gateway pod to mount the newly created custom certificate, signed by your custom CA and saved into the secret `istio-ingressgateway-custom-certs`
 
 
 REFERENCE
