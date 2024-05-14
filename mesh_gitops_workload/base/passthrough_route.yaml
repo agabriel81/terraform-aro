@@ -4,7 +4,7 @@ metadata:
   labels:
     app: istio-ingressgateway
   name: trafficmanager-route
-  namespace: istio-system
+  namespace: bookinfo
 spec:
   host: agabriel
   port:
