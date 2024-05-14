@@ -6,7 +6,7 @@ metadata:
   name: trafficmanager-route
   namespace: istio-system
 spec:
-  host: 
+  host: agabriel
   port:
     targetPort: https
   tls:
