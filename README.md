@@ -49,7 +49,7 @@ $ az aro show -g ${TF_VAR_resourcegroup_name} -n ${TF_VAR_cluster_name} --query 
 $ oc login <API URL> -u kubeadmin
 ```
 
-Access the ARO console and install the OpenShift GitOps using the official documentation [1] (version 1.12 at the time of writing).
+Access the ARO console and # install the OpenShift GitOps# using the official documentation [1] (version 1.12 at the time of writing).
 
 Create a GitOps application for installating the Cert-manager, Kiali, Jaeger and ServiceMesh Operators, with ServiceMeshControlPlane and ServiceMeshMemberRoll CRDs pointing the `mesh_gitops_cluster` directory of this repository. 
 
