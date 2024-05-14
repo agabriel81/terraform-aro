@@ -108,7 +108,7 @@ The OpenShift ServiceMesh Istio Gateway is already configured for mounting a cus
 
 And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application.
 
-Substitute the `TM_ROUTE' placeholder into yaml manifests for `mesh_gitops_workload` directory with the Azure Traffic Manager profile DNS name ${TF_VAR_tm_rout}:
+Substitute the `TM_ROUTE` placeholder into yaml manifests for `mesh_gitops_workload` directory with the Azure Traffic Manager profile DNS name ${TF_VAR_tm_rout}:
 
 ```
 $ sed 's/TM_ROUTE/agabriel-aro-tm.trafficmanager.net/g' -i mesh_gitops_workload/*.yaml
