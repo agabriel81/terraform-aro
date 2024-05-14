@@ -111,25 +111,8 @@ The OpenShift ServiceMesh Istio Gateway is already configured for mounting a cus
 
 And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application.
 
-Substitute the `TM_ROUTE` placeholder into yaml manifests for `mesh_gitops_workload` directory with the Azure Traffic Manager profile DNS name ${TF_VAR_tm_rout}:
-
 ```
-$ sed 's/TM_ROUTE/agabriel-aro-tm.trafficmanager.net/g' -i mesh_gitops_workload/*.yaml
-``` 
-
-Push the change to the Git repository:
-
-```
-git add .
-git commit -am "<your commit message>"
-git push
-```
-
-Create the OpenShift GitOps Application:
-
-
-```
-$ cat <<EOF | oc apply -f -
+cat <<EOF | oc apply -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -137,13 +120,36 @@ metadata:
   namespace: openshift-gitops
 spec:
   destination:
-    name: ''
     namespace: 'bookinfo'
     server: 'https://kubernetes.default.svc'
   source:
-    path: mesh_gitops_workload
+    path: mesh_gitops_workload/base
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
     targetRevision: master
+    kustomize:
+      patches:
+      - target:
+          kind: Route
+          name: trafficmanager-route
+        patch: |-
+          - op: replace
+            path: spec/host
+            value: "agabriel-aro-tm.trafficmanager.net"
+      - target:
+          kind: Gatewat
+          name: bookinfo-gateway
+        patch: |-
+          - op: replace
+            path: spec/servers/hosts
+            value: "agabriel-aro-tm.trafficmanager.net"
+      - target:
+          kind: VirtualService
+          name: bookinfo
+        patch: |-
+          - op: replace
+            path: spec/hosts
+            value: "agabriel-aro-tm.trafficmanager.net"
+  project: default
   sources: []
   project: default
   syncPolicy:
