@@ -19,7 +19,7 @@ Prerequisites and versions:
 Clone the repository and change to repo directory:
 ```
 $ https://github.com/agabriel81/terraform-aro.git
-$ cd terraform-aro
+$ cd terraform-aro/terraform-code
 ```
 
 Start the Terraform process by passing few variables:
