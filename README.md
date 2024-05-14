@@ -33,6 +33,9 @@ $ export TF_VAR_resourcegroup_name=aro-ger-agabriel
 $ export TF_VAR_cluster_name=aro-ger-cluster1
 $ export TF_VAR_tm_route=agabriel-aro-tm.trafficmanager.net
 ```
+
+Deploy all Azure and OpenShift resources using Terraform:
+
 ```
 $ terraform init
 $ terraform validate
