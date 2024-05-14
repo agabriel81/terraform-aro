@@ -4,7 +4,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     argocd.argoproj.io/sync-wave: "1"
-  generateName: cert-manager-operator-
   namespace: cert-manager-operator
 spec:
   targetNamespaces:
