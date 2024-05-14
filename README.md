@@ -137,21 +137,21 @@ spec:
         patch: |-
           - op: replace
             path: /spec/host
-            value: "agabriel-aro-tm.trafficmanager.net"
+            value: $TF_VAR_tm_route
       - target:
           kind: Gateway
           name: bookinfo-gateway
         patch: |-
           - op: replace
             path: /spec/servers/0/hosts/0
-            value: "agabriel-aro-tm.trafficmanager.net"
+            value: $TF_VAR_tm_route
       - target:
           kind: VirtualService
           name: bookinfo
         patch: |-
           - op: replace
             path: /spec/hosts/0
-            value: "agabriel-aro-tm.trafficmanager.net"
+            value: $TF_VAR_tm_route
   project: default
   sources: []
   syncPolicy:
