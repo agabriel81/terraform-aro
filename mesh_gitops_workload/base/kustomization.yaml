@@ -1,0 +1,8 @@
+kind: Kustomization
+
+resources:
+- bookinfo_kube-resources.yaml
+- virtualservice.yaml
+- gateway.yaml
+- passthrough_route.yaml
+- destinationrules.yaml
