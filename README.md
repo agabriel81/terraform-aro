@@ -111,6 +111,9 @@ The OpenShift ServiceMesh Istio Gateway is already configured for mounting a cus
 
 And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application.
 
+We will use Kustomize with an inline patch to configure the Azure Traffic Manager DNS name.
+
+
 ```
 cat <<EOF | oc apply -f -
 apiVersion: argoproj.io/v1alpha1
@@ -133,25 +136,24 @@ spec:
           name: trafficmanager-route
         patch: |-
           - op: replace
-            path: spec/host
+            path: /spec/host
             value: "agabriel-aro-tm.trafficmanager.net"
       - target:
-          kind: Gatewat
+          kind: Gateway
           name: bookinfo-gateway
         patch: |-
           - op: replace
-            path: spec/servers/hosts
+            path: /spec/servers/0/hosts/0
             value: "agabriel-aro-tm.trafficmanager.net"
       - target:
           kind: VirtualService
           name: bookinfo
         patch: |-
           - op: replace
-            path: spec/hosts
+            path: /spec/hosts/0
             value: "agabriel-aro-tm.trafficmanager.net"
   project: default
   sources: []
-  project: default
   syncPolicy:
     retry:
       limit: 5
@@ -164,7 +166,7 @@ EOF
 
 Access the OpenShift GitOps ArgoCD instance and sync the `mesh-workload` Application.
 
-The repository will configure a passthrough OpenShift Route for exposing our $TM_ROUTE/productpage endpoint, served by an Azure Traffic Manager component.
+The repository will configure a passthrough OpenShift Route for exposing our $TF_VAR_tm_route/productpage endpoint, served by an Azure Traffic Manager component.
 
 The application should expose a certificate signed by our custom CA with a 2h duration.
 
