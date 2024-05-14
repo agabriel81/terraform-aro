@@ -106,7 +106,24 @@ $ oc create -f /tmp/certificate.yaml
 
 The OpenShift ServiceMesh Istio Gateway is already configured for mounting a custom certificate and it's needed to restart the Istio Gateway pod to mount the newly created custom certificate, signed by your custom CA and saved into the secret `istio-ingressgateway-custom-certs`
 
-And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application:
+And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application.
+
+Substitute the `TM_ROUTE' placeholder into yaml manifests for `mesh_gitops_workload` directory with the Azure Traffic Manager profile DNS name ${TF_VAR_tm_rout}:
+
+```
+$ sed 's/TM_ROUTE/agabriel-aro-tm.trafficmanager.net/g' -i mesh_gitops_workload/*.yaml
+``` 
+
+Push the change to the Git repository:
+
+```
+git add .
+git commit -am "<your commit message>"
+git push
+```
+
+Create the OpenShift GitOps Application:
+
 
 ```
 $ cat <<EOF | oc apply -f -
@@ -124,11 +141,6 @@ spec:
     path: mesh_gitops_workload
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
     targetRevision: master
-    plugin:
-      name: envsubst
-      env:
-        - name: TM_ROUTE
-          value: \$TF_VAR_tm_route
   sources: []
   project: default
   syncPolicy:

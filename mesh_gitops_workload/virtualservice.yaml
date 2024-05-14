@@ -7,7 +7,7 @@ spec:
   gateways:
   - bookinfo-gateway
   hosts:
-  - $TM_ROUTE
+  - agabriel-aro-tm.trafficmanager.net
   http:
   - match:
     - uri:

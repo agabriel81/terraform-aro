@@ -8,7 +8,7 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - $TM_ROUTE
+    - agabriel-aro-tm.trafficmanager.net
     port:
       name: https
       number: 443
