@@ -46,7 +46,7 @@ spec:
       serviceAccountName: bookinfo-details
       containers:
       - name: details
-        image: quay.io/maistra/examples-bookinfo-details-v1:2.4.1
+        image: quay.io/maistra/examples-bookinfo-details-v1:2.4.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
