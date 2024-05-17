@@ -57,4 +57,4 @@ spec:
   tracing:
     sampling: 10000
     type: Jaeger
-  version: v2.5
+  version: v2.4
