@@ -110,10 +110,10 @@ resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
 }
 
 resource "azurerm_subnet" "appgw_subnet" {
-  name                 = "appgw-subnet"
+  name                 = "AppGatewaySubnet"
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
-  address_prefixes     = ["10.0.3.0/24"]
+  address_prefixes     = ["10.0.3.0/27"]
 }
 
 resource "azurerm_public_ip" "appgw_pip" {
@@ -171,7 +171,7 @@ resource "azurerm_application_gateway" "aro_appgw" {
   backend_http_settings {
     name                  = local.http_setting_name
     cookie_based_affinity = "Disabled"
-    path                  = "/productpage"
+    path                  = "/"
     port                  = 80
     protocol              = "Http"
     request_timeout       = 60
@@ -194,6 +194,37 @@ resource "azurerm_application_gateway" "aro_appgw" {
   }
 }
 
+resource "azurerm_subnet" "bastion_subnet" {
+  name                 = "AzureBastionSubnet"
+  resource_group_name  = azurerm_resource_group.aro_rg.name
+  virtual_network_name = azurerm_virtual_network.aro_vnet.name
+  service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
+  address_prefixes     = ["10.0.2.0/27"]
+}
+
+resource "azurerm_public_ip" "bastion_pip" {
+  name                = "bastion-pip"
+  location            = azurerm_resource_group.aro_rg.location
+  resource_group_name = azurerm_resource_group.aro_rg.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+resource "azurerm_bastion_host" "bastion_aro" {
+  name                = "bastion-aro"
+  location            = azurerm_resource_group.aro_rg.location
+  resource_group_name = azurerm_resource_group.aro_rg.name
+
+  sku                 = "Standard"
+  ip_connect_enabled  = "true"
+  tunneling_enabled   = "true"
+
+  ip_configuration {
+    name                 = "configuration"
+    subnet_id            = azurerm_subnet.bastion_subnet.id
+    public_ip_address_id = azurerm_public_ip.bastion_pip.id
+  }
+}
 
 output "console_url" {
   value = azurerm_redhat_openshift_cluster.aro-cluster.console_url
