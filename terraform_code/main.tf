@@ -14,7 +14,7 @@ resource "azuread_service_principal" "azuread_sp" {
 
 resource "azuread_service_principal_password" "azuread_sp_pwd" {
   service_principal_id = azuread_service_principal.azuread_sp.object_id
-  end_date             = "2025-12-31T23:59:59Z"     
+  end_date             = "2024-12-31T23:59:59Z"     
 }
 
 data "azuread_service_principal" "redhatopenshift" {
@@ -50,7 +50,7 @@ resource "azurerm_subnet" "main_subnet" {
   name                 = "main-subnet"
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
-  address_prefixes     = ["10.0.0.0/23"]
+  address_prefixes     = ["10.0.0.0/24"]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
 }
 
@@ -58,7 +58,7 @@ resource "azurerm_subnet" "worker_subnet" {
   name                 = var.worker_subnet_name
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
-  address_prefixes     = ["10.0.2.0/23"]
+  address_prefixes     = ["10.0.1.0/24"]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
 }
 
@@ -84,11 +84,11 @@ resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
   }
 
   api_server_profile {
-    visibility = "Public"
+    visibility = "Private"
   }
 
   ingress_profile {
-    visibility = "Public"
+    visibility = "Private"
   }
 
   worker_profile {
@@ -109,33 +109,91 @@ resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
   ]
 }
 
-resource "azurerm_traffic_manager_profile" "aro-tm" {
-  name = "agabriel-aro-tm"
-  resource_group_name    = azurerm_resource_group.aro_rg.name
-  traffic_routing_method = "Priority"
+resource "azurerm_subnet" "appgw_subnet" {
+  name                 = "appgw-subnet"
+  resource_group_name  = azurerm_resource_group.aro_rg.name
+  virtual_network_name = azurerm_virtual_network.aro_vnet.name
+  address_prefixes     = ["10.0.3.0/24"]
+}
 
-  dns_config {
-    relative_name = "agabriel-aro-tm"
-    ttl           = 100
+resource "azurerm_public_ip" "appgw_pip" {
+  name                = "appgw-pip"
+  resource_group_name = azurerm_resource_group.aro_rg.name
+  location            = azurerm_resource_group.aro_rg.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  zones               = ["1","2","3"]
+}
+
+# since these variables are re-used - a locals block makes this more maintainable
+locals {
+  backend_address_pool_name      = "${azurerm_virtual_network.aro_vnet.name}-beap"
+  frontend_port_name             = "${azurerm_virtual_network.aro_vnet.name}-feport"
+  frontend_ip_configuration_name = "${azurerm_virtual_network.aro_vnet.name}-feip"
+  http_setting_name              = "${azurerm_virtual_network.aro_vnet.name}-be-htst"
+  listener_name                  = "${azurerm_virtual_network.aro_vnet.name}-httplstn"
+  request_routing_rule_name      = "${azurerm_virtual_network.aro_vnet.name}-rqrt"
+  redirect_configuration_name    = "${azurerm_virtual_network.aro_vnet.name}-rdrcfg"
+  ip_addresses                   = "${azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile[0].ip_address}-ingressip"
+}
+
+resource "azurerm_application_gateway" "aro_appgw" {
+  name                = "aro-appgw"
+  resource_group_name = azurerm_resource_group.aro_rg.name
+  location            = azurerm_resource_group.aro_rg.location
+
+  sku {
+    name     = "Standard_v2"
+    tier     = "Standard_v2"
+    capacity = 2
   }
 
-  monitor_config {
-    protocol                     = "HTTPS"
-    port                         = 443
-    path                         = "/productpage"
-    interval_in_seconds          = 30
-    timeout_in_seconds           = 9
-    tolerated_number_of_failures = 3
+  gateway_ip_configuration {
+    name      = "gw-conf"
+    subnet_id = azurerm_subnet.appgw_subnet.id
+  }
+
+  frontend_port {
+    name = local.frontend_port_name
+    port = 80
+  }
+
+  frontend_ip_configuration {
+    name                 = local.frontend_ip_configuration_name
+    public_ip_address_id = azurerm_public_ip.appgw_pip.id
+  }
+
+  backend_address_pool {
+    name = local.backend_address_pool_name
+//    ip_addresses = local.ip_addresses
+  }
+
+  backend_http_settings {
+    name                  = local.http_setting_name
+    cookie_based_affinity = "Disabled"
+    path                  = "/productpage"
+    port                  = 80
+    protocol              = "Http"
+    request_timeout       = 60
+  }
+
+  http_listener {
+    name                           = local.listener_name
+    frontend_ip_configuration_name = local.frontend_ip_configuration_name
+    frontend_port_name             = local.frontend_port_name
+    protocol                       = "Http"
+  }
+
+  request_routing_rule {
+    name                       = local.request_routing_rule_name
+    priority                   = 9
+    rule_type                  = "Basic"
+    http_listener_name         = local.listener_name
+    backend_address_pool_name  = local.backend_address_pool_name
+    backend_http_settings_name = local.http_setting_name
   }
 }
 
-resource "azurerm_traffic_manager_external_endpoint" "aro-tm-endpoint" {
-  name                 = var.cluster_name
-  profile_id           = azurerm_traffic_manager_profile.aro-tm.id
-  always_serve_enabled = false
-  priority             = 1
-  target               = azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile.0.ip_address
-}
 
 output "console_url" {
   value = azurerm_redhat_openshift_cluster.aro-cluster.console_url
