@@ -134,7 +134,7 @@ locals {
   listener_name                  = "${azurerm_virtual_network.aro_vnet.name}-httplstn"
   request_routing_rule_name      = "${azurerm_virtual_network.aro_vnet.name}-rqrt"
   redirect_configuration_name    = "${azurerm_virtual_network.aro_vnet.name}-rdrcfg"
-  ip_addresses                   = "${azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile[0].ip_address}-ingressip"
+  aro_default_ingress_ip         = "${azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile[0].ip_address}"
 }
 
 resource "azurerm_application_gateway" "aro_appgw" {
@@ -165,7 +165,7 @@ resource "azurerm_application_gateway" "aro_appgw" {
 
   backend_address_pool {
     name = local.backend_address_pool_name
-//    ip_addresses = local.ip_addresses
+    ip_addresses = [local.aro_default_ingress_ip]
   }
 
   backend_http_settings {
@@ -224,6 +224,34 @@ resource "azurerm_bastion_host" "bastion_aro" {
     subnet_id            = azurerm_subnet.bastion_subnet.id
     public_ip_address_id = azurerm_public_ip.bastion_pip.id
   }
+}
+
+resource "azurerm_traffic_manager_profile" "aro-tm" {
+  name = "agabriel-aro-tm"
+  resource_group_name    = azurerm_resource_group.aro_rg.name
+  traffic_routing_method = "Priority"
+
+  dns_config {
+    relative_name = "agabriel-aro-tm"
+    ttl           = 100
+  }
+
+  monitor_config {
+    protocol                     = "HTTPS"
+    port                         = 443
+    path                         = "/productpage"
+    interval_in_seconds          = 30
+    timeout_in_seconds           = 9
+    tolerated_number_of_failures = 3
+  }
+}
+
+resource "azurerm_traffic_manager_external_endpoint" "aro-tm-endpoint" {
+  name                 = var.cluster_name
+  profile_id           = azurerm_traffic_manager_profile.aro-tm.id
+  always_serve_enabled = false
+  priority             = 1
+  target               = azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile.0.ip_address
 }
 
 output "console_url" {
