@@ -194,42 +194,42 @@ resource "azurerm_application_gateway" "aro_appgw" {
   }
 }
 
-resource "azurerm_subnet" "bastion_subnet" {
-  name                 = "AzureBastionSubnet"
-  resource_group_name  = azurerm_resource_group.aro_rg.name
-  virtual_network_name = azurerm_virtual_network.aro_vnet.name
-  service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
-  address_prefixes     = ["10.0.2.0/27"]
-}
+//resource "azurerm_subnet" "bastion_subnet" {
+//  name                 = "AzureBastionSubnet"
+//  resource_group_name  = azurerm_resource_group.aro_rg.name
+//  virtual_network_name = azurerm_virtual_network.aro_vnet.name
+//  service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
+//  address_prefixes     = ["10.0.2.0/27"]
+//}
 
-resource "azurerm_public_ip" "bastion_pip" {
-  name                = "bastion-pip"
-  location            = azurerm_resource_group.aro_rg.location
-  resource_group_name = azurerm_resource_group.aro_rg.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
+//resource "azurerm_public_ip" "bastion_pip" {
+//  name                = "bastion-pip"
+//  location            = azurerm_resource_group.aro_rg.location
+//  resource_group_name = azurerm_resource_group.aro_rg.name
+//  allocation_method   = "Static"
+//  sku                 = "Standard"
+//}
 
-resource "azurerm_bastion_host" "bastion_aro" {
-  name                = "bastion-aro"
-  location            = azurerm_resource_group.aro_rg.location
-  resource_group_name = azurerm_resource_group.aro_rg.name
+//resource "azurerm_bastion_host" "bastion_aro" {
+//  name                = "bastion-aro"
+//  location            = azurerm_resource_group.aro_rg.location
+//  resource_group_name = azurerm_resource_group.aro_rg.name
 
-  sku                 = "Standard"
-  ip_connect_enabled  = "true"
-  tunneling_enabled   = "true"
+//  sku                 = "Standard"
+//  ip_connect_enabled  = "true"
+//  tunneling_enabled   = "true"
 
-  ip_configuration {
-    name                 = "configuration"
-    subnet_id            = azurerm_subnet.bastion_subnet.id
-    public_ip_address_id = azurerm_public_ip.bastion_pip.id
-  }
-}
+//  ip_configuration {
+//    name                 = "configuration"
+//    subnet_id            = azurerm_subnet.bastion_subnet.id
+//    public_ip_address_id = azurerm_public_ip.bastion_pip.id
+//  }
+//}
 
-resource "azurerm_traffic_manager_profile" "aro-tm" {
+resource "azurerm_traffic_manager_profile" "aro_tm" {
   name = "agabriel-aro-tm"
   resource_group_name    = azurerm_resource_group.aro_rg.name
-  traffic_routing_method = "Priority"
+  traffic_routing_method = "Weighted"
 
   dns_config {
     relative_name = "agabriel-aro-tm"
@@ -246,12 +246,53 @@ resource "azurerm_traffic_manager_profile" "aro-tm" {
   }
 }
 
-resource "azurerm_traffic_manager_external_endpoint" "aro-tm-endpoint" {
+resource "azurerm_traffic_manager_azure_endpoint" "aro-tm-endpoint" {
   name                 = var.cluster_name
-  profile_id           = azurerm_traffic_manager_profile.aro-tm.id
+  profile_id           = azurerm_traffic_manager_profile.aro_tm.id
   always_serve_enabled = false
-  priority             = 1
-  target               = azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile.0.ip_address
+  weight               = 50
+  target_resource_id   = azurerm_public_ip.appgw_pip.id
+}
+
+resource "azurerm_network_interface" "jumphost_nic" {
+  name                = "jumphost-nic"
+  location            = azurerm_resource_group.aro_rg.location
+  resource_group_name = azurerm_resource_group.aro_rg.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.main_subnet.id
+    private_ip_address_allocation = "Static"
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "jumphost" {
+  name                = "jumphost"
+  resource_group_name = azurerm_resource_group.aro_rg.name
+  location            = azurerm_resource_group.aro_rg.location
+  size                = "Standard_B1s"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.jumphost_nic.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/id_rsa_aro.pub")
+  }
+
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "RedHat"
+    offer     = "RHEL"
+    sku       = "8-lvm-gen2"
+    version   = "latest"
+  }
 }
 
 output "console_url" {
