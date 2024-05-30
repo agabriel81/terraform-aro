@@ -267,7 +267,7 @@ resource "azurerm_network_interface" "jumphost_nic" {
   ip_configuration {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.master_subnet.id
-    private_ip_address_allocation = "Static"
+    private_ip_address_allocation = "Dynamic"
   }
 }
 
