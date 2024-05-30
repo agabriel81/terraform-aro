@@ -140,6 +140,7 @@ resource "azurerm_public_ip" "appgw_pip" {
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1","2","3"]
+  domain_name_label   = var.cluster_name
 }
 
 resource "azurerm_application_gateway" "aro_appgw" {
