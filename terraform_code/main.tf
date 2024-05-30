@@ -1,9 +1,26 @@
+# since these variables are re-used - a locals block makes this more maintainable
+locals {
+  app_gw_pip                     = "${var.cluster_name}-appgw-pip"
+  aro_app_name                   = "${var.cluster_name}-app"
+  aro_vnet_name                  = "${var.cluster_name}-vnet"
+  jumphost_name                  = "${var.cluster_name}-jumphost"
+  app_gw_name                    = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-appgw"
+  backend_address_pool_name      = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-beap"
+  frontend_port_name             = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-feport"
+  frontend_ip_configuration_name = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-feip"
+  http_setting_name              = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-be-htst"
+  listener_name                  = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-httplstn"
+  request_routing_rule_name      = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-rqrt"
+  redirect_configuration_name    = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-rdrcfg"
+  aro_default_ingress_ip         = "${azurerm_redhat_openshift_cluster.aro_cluster.ingress_profile[0].ip_address}"
+}
+
 data "azurerm_client_config" "azurerm_client" {}
 
 data "azuread_client_config" "azuread_client" {}
 
 resource "azuread_application_registration" "azuread_app" {
-  display_name = var.azure_app_name
+  display_name = local.aro_app_name
 }
 
 resource "azuread_service_principal" "azuread_sp" {
@@ -40,14 +57,14 @@ resource "azurerm_resource_group" "aro_rg" {
 }
 
 resource "azurerm_virtual_network" "aro_vnet" {
-  name                = var.vnet_name
+  name                = local.aro_vnet_name
   address_space       = ["10.0.0.0/22"]
   location            = var.location
   resource_group_name = azurerm_resource_group.aro_rg.name
 }
 
-resource "azurerm_subnet" "main_subnet" {
-  name                 = "main-subnet"
+resource "azurerm_subnet" "master_subnet" {
+  name                 = "master-subnet"
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
   address_prefixes     = ["10.0.0.0/24"]
@@ -55,14 +72,14 @@ resource "azurerm_subnet" "main_subnet" {
 }
 
 resource "azurerm_subnet" "worker_subnet" {
-  name                 = var.worker_subnet_name
+  name                 = "worker-subnet"
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
 }
 
-resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
+resource "azurerm_redhat_openshift_cluster" "aro_cluster" {
   name                = var.cluster_name
   location            = var.location
   resource_group_name = azurerm_resource_group.aro_rg.name
@@ -80,7 +97,7 @@ resource "azurerm_redhat_openshift_cluster" "aro-cluster" {
 
   main_profile {
     vm_size   = "Standard_D8s_v3"
-    subnet_id = azurerm_subnet.main_subnet.id
+    subnet_id = azurerm_subnet.master_subnet.id
   }
 
   api_server_profile {
@@ -117,7 +134,7 @@ resource "azurerm_subnet" "appgw_subnet" {
 }
 
 resource "azurerm_public_ip" "appgw_pip" {
-  name                = "appgw-pip"
+  name                = local.app_gw_pip
   resource_group_name = azurerm_resource_group.aro_rg.name
   location            = azurerm_resource_group.aro_rg.location
   allocation_method   = "Static"
@@ -125,20 +142,8 @@ resource "azurerm_public_ip" "appgw_pip" {
   zones               = ["1","2","3"]
 }
 
-# since these variables are re-used - a locals block makes this more maintainable
-locals {
-  backend_address_pool_name      = "${azurerm_virtual_network.aro_vnet.name}-beap"
-  frontend_port_name             = "${azurerm_virtual_network.aro_vnet.name}-feport"
-  frontend_ip_configuration_name = "${azurerm_virtual_network.aro_vnet.name}-feip"
-  http_setting_name              = "${azurerm_virtual_network.aro_vnet.name}-be-htst"
-  listener_name                  = "${azurerm_virtual_network.aro_vnet.name}-httplstn"
-  request_routing_rule_name      = "${azurerm_virtual_network.aro_vnet.name}-rqrt"
-  redirect_configuration_name    = "${azurerm_virtual_network.aro_vnet.name}-rdrcfg"
-  aro_default_ingress_ip         = "${azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile[0].ip_address}"
-}
-
 resource "azurerm_application_gateway" "aro_appgw" {
-  name                = "aro-appgw"
+  name                = local.app_gw_name
   resource_group_name = azurerm_resource_group.aro_rg.name
   location            = azurerm_resource_group.aro_rg.location
 
@@ -255,19 +260,19 @@ resource "azurerm_traffic_manager_azure_endpoint" "aro-tm-endpoint" {
 }
 
 resource "azurerm_network_interface" "jumphost_nic" {
-  name                = "jumphost-nic"
+  name                = local.jumphost_name
   location            = azurerm_resource_group.aro_rg.location
   resource_group_name = azurerm_resource_group.aro_rg.name
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.main_subnet.id
+    subnet_id                     = azurerm_subnet.master_subnet.id
     private_ip_address_allocation = "Static"
   }
 }
 
 resource "azurerm_linux_virtual_machine" "jumphost" {
-  name                = "jumphost"
+  name                = local.jumphost_name
   resource_group_name = azurerm_resource_group.aro_rg.name
   location            = azurerm_resource_group.aro_rg.location
   size                = "Standard_B1s"
@@ -296,6 +301,6 @@ resource "azurerm_linux_virtual_machine" "jumphost" {
 }
 
 output "console_url" {
-  value = azurerm_redhat_openshift_cluster.aro-cluster.console_url
+  value = azurerm_redhat_openshift_cluster.aro_cluster.console_url
 }
 
