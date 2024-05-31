@@ -181,6 +181,7 @@ resource "azurerm_application_gateway" "aro_appgw" {
     port                  = 80
     protocol              = "Http"
     request_timeout       = 60
+    host_name             = azurerm_public_ip.appgw_pip.fqdn
   }
 
   http_listener {
@@ -238,14 +239,14 @@ resource "azurerm_traffic_manager_profile" "aro_tm" {
   traffic_routing_method = "Weighted"
 
   dns_config {
-    relative_name = "agabriel-aro-tm"
+    relative_name = var.tm_route
     ttl           = 100
   }
 
   monitor_config {
-    protocol                     = "HTTPS"
-    port                         = 443
-    path                         = "/productpage"
+    protocol                     = "HTTP"
+    port                         = 80
+    path                         = "/"
     interval_in_seconds          = 30
     timeout_in_seconds           = 9
     tolerated_number_of_failures = 3
@@ -258,6 +259,10 @@ resource "azurerm_traffic_manager_azure_endpoint" "aro-tm-endpoint" {
   always_serve_enabled = false
   weight               = 50
   target_resource_id   = azurerm_public_ip.appgw_pip.id
+  custom_header        { 
+    value              = azurerm_public_ip.appgw_pip.fqdn
+    name               = "Host"
+  }
 }
 
 resource "azurerm_network_interface" "jumphost_nic" {
