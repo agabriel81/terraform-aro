@@ -4,6 +4,13 @@ locals {
   aro_app_name                   = "${var.cluster_name}-app"
   aro_vnet_name                  = "${var.cluster_name}-vnet"
   jumphost_name                  = "${var.cluster_name}-jumphost"
+  aro_custom_domain              = "${var.cluster_name}.openshift.dev"
+  aro_master_subnet_name         = "${var.master_subnet}-${var.cluster_name}"
+  aro_worker_subnet_name         = "${var.worker_subnet}-${var.cluster_name}"
+  aro_master_subnet_cidr         = "${var.master_subnet_cidr}"
+  aro_worker_subnet_cidr         = "${var.worker_subnet_cidr}"
+  aro_vnet_cidr                  = "${var.vnet_cidr}"
+  app_gw_cidr                    = "${var.app_gw_cidr}"
   app_gw_name                    = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-appgw"
   backend_address_pool_name      = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-beap"
   frontend_port_name             = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-feport"
@@ -58,24 +65,24 @@ resource "azurerm_resource_group" "aro_rg" {
 
 resource "azurerm_virtual_network" "aro_vnet" {
   name                = local.aro_vnet_name
-  address_space       = ["10.0.0.0/22"]
+  address_space       = [local.aro_vnet_cidr]
   location            = var.location
   resource_group_name = azurerm_resource_group.aro_rg.name
 }
 
 resource "azurerm_subnet" "master_subnet" {
-  name                 = "master-subnet"
+  name                 = local.aro_master_subnet_name
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
-  address_prefixes     = ["10.0.0.0/24"]
+  address_prefixes     = [local.aro_master_subnet_cidr]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
 }
 
 resource "azurerm_subnet" "worker_subnet" {
-  name                 = "worker-subnet"
+  name                 = local.aro_worker_subnet_name
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes     = [local.aro_worker_subnet_cidr]
   service_endpoints    = ["Microsoft.Storage", "Microsoft.ContainerRegistry"]
 }
 
@@ -126,11 +133,16 @@ resource "azurerm_redhat_openshift_cluster" "aro_cluster" {
   ]
 }
 
+resource "azurerm_private_dns_zone" "aro_custom_domain" {
+  name                = local.aro_custom_domain
+  resource_group_name = azurerm_resource_group.aro_rg.name
+}
+
 resource "azurerm_subnet" "appgw_subnet" {
   name                 = "AppGatewaySubnet"
   resource_group_name  = azurerm_resource_group.aro_rg.name
   virtual_network_name = azurerm_virtual_network.aro_vnet.name
-  address_prefixes     = ["10.0.3.0/27"]
+  address_prefixes     = [local.app_gw_cidr]
 }
 
 resource "azurerm_public_ip" "appgw_pip" {
@@ -151,7 +163,7 @@ resource "azurerm_application_gateway" "aro_appgw" {
   sku {
     name     = "Standard_v2"
     tier     = "Standard_v2"
-    capacity = 2
+    capacity = 3
   }
 
   gateway_ip_configuration {

@@ -8,7 +8,7 @@ Prerequisites and versions:
 - oc (CLI): version depend on the cluster version
 ```
 ```
-- ARO: 4.12
+- ARO: 4.13
 - OpenShift GitOps: 1.12
 - OpenShift Kiali: 1.73
 - OpenShift Jaeger: 1.53
@@ -25,13 +25,12 @@ $ cd terraform-aro/terraform-code
 Start the Terraform process by passing few variables:
 ```
 $ export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
-$ export TF_VAR_azure_app_name=agabriel-app-aro-ita
 $ export TF_VAR_cluster_domain=agabriel-ger
 $ export TF_VAR_cluster_version=4.12.25
 $ export TF_VAR_location=germanywestcentral
 $ export TF_VAR_resourcegroup_name=aro-ger-agabriel
 $ export TF_VAR_cluster_name=aro-ger-cluster1
-$ export TF_VAR_tm_route=agabriel-aro-tm.trafficmanager.net
+$ export TF_VAR_tm_route=agabriel-aro-tm
 ```
 
 Deploy all Azure and OpenShift resources using Terraform:
