@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bluegreen
+  namespace: bluegreen
+  labels:
+    app: bluegreen
+    service: bluegreen
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: bluegreen
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bluegreen
+  namespace: bluegreen
+  labels:
+    app: bluegreen
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bluegreen
+      version: v1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+      labels:
+        app: bluegreen
+        version: v1
+    spec:
+      containers:
+      - name: details
+        image: docker.io/amasucci/bluegreen
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+          - name: COLOR
+            value: blue

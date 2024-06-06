@@ -1,11 +1,12 @@
 - name: Day-1 Configure ARO cluster Playbook
   hosts: localhost
   module_defaults:
-    group/redhat.openshift.okd:
-      host: https://k8s.example.com/
+    redhat.openshift.openshift_auth:
+      host: https://api.agabriel-neu.northeurope.aroapp.io:6443/
       ca_cert: ca.pem
+      validate_certs: no
   tasks:
-    - name: Authenticate to OpenShift cluster
+    - name: Authenticate to OpenShift cluster and gell a list of all pods from any namespace
       block:
         # It's good practice to store login credentials in a secure vault and not
         # directly in playbooks.
@@ -18,33 +19,42 @@
             password: "{{ openshift_admin_password }}"
           register: openshift_auth_results
 
-        # Previous task provides the token/api_key, while all other parameters
-        # are taken from module_defaults
-        - name: Get a list of all pods from any namespace
-          kubernetes.core.k8s_info:
-            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
-            kind: Pod
-          register: pod_list
-
-        - name: Create a Deployment by reading the definition from a local file
+        - name: Create Projects by reading the definition from a local file
           redhat.openshift.k8s:
             state: present
-            src: /testing/deployment.yml
+            src: ../cluster_conf/projects.yaml
 
-        - name: fail on validation errors
+        - name: Create a IngressController by reading the definition from a local file
           redhat.openshift.k8s:
             state: present
-            definition: "{{ lookup('template', '/testing/deployment.yml') | from_yaml }}"
-            validate:
-              fail_on_error: true
+            src: ../cluster_conf/ingresscontroller.yaml
 
-        - name: warn on validation errors, check for unexpected properties
+        - name: Create OperatorGroups by reading the definition from a local file
           redhat.openshift.k8s:
             state: present
-            definition: "{{ lookup('template', '/testing/deployment.yml') | from_yaml }}"
-            validate:
-              fail_on_error: false
-              strict: true
+            src: ../cluster_conf/operatorgroup.yaml
+
+        - name: Create Subscriptions by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../cluster_conf/subscriptions.yaml
+
+        - name: Create ServiceMeshControlPlane by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../cluster_conf/smcp.yaml
+            wait: true
+
+        - name: Create ServiceMeshMemberRole by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../cluster_conf/smmr.yaml
+            wait: true
+
+        - name: Create BlueGreen Kube resources by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../workload_conf/bluegreen.yaml
 
       always:
         - name: If login succeeded, try to log out (revoke access token)
@@ -52,24 +62,3 @@
           redhat.openshift.openshift_auth:
             state: absent
             api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
-
-
-- name: Create a Deployment by reading the definition from a local file
-  redhat.openshift.k8s:
-    state: present
-    src: /testing/deployment.yml
-
-- name: fail on validation errors
-  redhat.openshift.k8s:
-    state: present
-    definition: "{{ lookup('template', '/testing/deployment.yml') | from_yaml }}"
-    validate:
-      fail_on_error: true
-
-- name: warn on validation errors, check for unexpected properties
-  redhat.openshift.k8s:
-    state: present
-    definition: "{{ lookup('template', '/testing/deployment.yml') | from_yaml }}"
-    validate:
-      fail_on_error: false
-      strict: true

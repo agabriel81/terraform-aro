@@ -1,9 +1,6 @@
 apiVersion: maistra.io/v2
 kind: ServiceMeshControlPlane
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-    argocd.argoproj.io/sync-wave: "4"
   finalizers:
   - maistra.io/istio-operator
   name: basic
@@ -23,6 +20,20 @@ spec:
   gateways:
     egress:
       enabled: true
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: false
+          replicas: 3
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringScheduling:
+              - key: app
+                operator: In
+                topologyKey: topology.kubernetes.io/zone
+                values:
+                - istio-egressgateway
     ingress:
       enabled: true
       runtime:

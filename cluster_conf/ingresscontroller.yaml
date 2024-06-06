@@ -1,0 +1,25 @@
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: custom
+  namespace: openshift-ingress-operator
+spec:
+  domain: aro-neu-cluster.openshift.dev
+  endpointPublishingStrategy:
+    loadBalancer:
+      dnsManagementPolicy: Managed
+      providerParameters:
+        type: Azure
+      scope: Internal
+    type: LoadBalancerService
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/worker: ""
+  routeSelector:
+    matchLabels:
+      type: custom
+  httpEmptyRequestsPolicy: Respond
+  httpErrorCodePages:
+    name: ""
+  replicas: 3
