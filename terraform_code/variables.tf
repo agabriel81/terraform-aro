@@ -22,10 +22,6 @@ variable "cluster_version" {
     type = string
 }
 
-variable "tm_route" {
-    type = string
-}
-
 variable "vnet_name" {
     type = string
     default = "aro-vnet"
@@ -53,10 +49,10 @@ variable "worker_subnet" {
 
 variable "worker_subnet_cidr" {
     type = string
-    default = "10.0.1.0/22"
+    default = "10.0.1.0/24"
 }
 
 variable "app_gw_cidr" {
     type = string
-    default = "10.0.3.0/27"
+    default = "10.0.2.0/27"
 }

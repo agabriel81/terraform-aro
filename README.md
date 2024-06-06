@@ -6,6 +6,7 @@ Prerequisites and versions:
 - Terraform (CLI): v1.8.3
 - az (CLI): 2.60.0
 - oc (CLI): version depend on the cluster version
+- a public ssh key in the file `~/.ssh/id_rsa_aro.pub` for accessing the jumphost
 ```
 ```
 - ARO: 4.13
@@ -30,8 +31,9 @@ $ export TF_VAR_cluster_version=4.12.25
 $ export TF_VAR_location=germanywestcentral
 $ export TF_VAR_resourcegroup_name=aro-ger-agabriel
 $ export TF_VAR_cluster_name=aro-ger-cluster1
-$ export TF_VAR_tm_route=agabriel-aro-tm
 ```
+
+Check if you want to override any variable (VNET, master/worker subnet name and CIDR etc) using the override.tf_to_be_implemented example file (by renaming it override.tf)
 
 Deploy all Azure and OpenShift resources using Terraform:
 
@@ -50,6 +52,16 @@ $ az aro show --name ${TF_VAR_cluster_name} --resource-group ${TF_VAR_resourcegr
 $ az aro show -g ${TF_VAR_resourcegroup_name} -n ${TF_VAR_cluster_name} --query apiserverProfile.url -o tsv 
 $ oc login <API URL> -u kubeadmin
 ```
+
+Access the jumphost created through the Microsoft Azure UI connecting through a Bastion and using the private `id_rsa_aro` ssh key.
+
+Install Ansible and Git:
+
+```
+$ sudo -i
+$ yum install ansible git -y
+```
+
 
 Access the ARO console and **install the OpenShift GitOps** using the official documentation [1] (version 1.12 at the time of writing).
 
