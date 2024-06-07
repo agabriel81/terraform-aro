@@ -1,8 +1,10 @@
 - name: Day-1 Configure ARO cluster Playbook
   hosts: localhost
+  vars_files:
+    - vars/var_file.yaml
   module_defaults:
     redhat.openshift.openshift_auth:
-      host: https://api.agabriel-neu.northeurope.aroapp.io:6443/
+      host: "{{ aro_api }}"
       ca_cert: ca.pem
       validate_certs: no
   tasks:
@@ -10,8 +12,8 @@
       block:
         # It's good practice to store login credentials in a secure vault and not
         # directly in playbooks.
-        - name: Include 'openshift_passwords.yml'
-          ansible.builtin.include_vars: openshift_passwords.yml
+        - name: Include 'openshift_password.yml'
+          ansible.builtin.include_vars: openshift_password.yml
 
         - name: Log in (obtain access token)
           redhat.openshift.openshift_auth:
@@ -80,6 +82,31 @@
           redhat.openshift.k8s:
             state: present
             src: ../workload_conf/route.yaml
+
+        - name: Get an existing Service object
+          kubernetes.core.k8s_info:
+            api_version: v1
+            kind: Service
+            name: router-custom
+            namespace: openshift-ingress
+          register: custom_ingresscontroller_svc
+
+        - name: Debug
+          ansible.builtin.debug:
+            msg: "{{ custom_ingresscontroller_svc.resources[0].status.loadBalancer.ingress | selectattr('ip', 'defined') | map(attribute='ip') }}"
+
+        - name: Set Facts IP
+          set_fact :
+            ip: "{{ custom_ingresscontroller_svc.resources[0].status.loadBalancer.ingress | selectattr('ip', 'defined') | map(attribute='ip') }}"
+
+        - name: ensure an A record set with multiple records
+          azure.azcollection.azure_rm_privatednszone.azure_rm_privatednsrecordset:
+            resource_group: "{{ azure_resource_group }}"
+            relative_name: "*"
+            zone_name: "{{ privatedns_domain }}"
+            record_type: A
+            records:
+              - entry: "{{ ip[0] }}"
 
       always:
         - name: If login succeeded, try to log out (revoke access token)

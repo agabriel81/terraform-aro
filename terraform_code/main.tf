@@ -4,7 +4,7 @@ locals {
   aro_app_name                   = "${var.cluster_name}-app"
   aro_vnet_name                  = "${var.cluster_name}-vnet"
   jumphost_name                  = "${var.cluster_name}-jumphost"
-  aro_custom_domain              = "${var.cluster_name}.openshift.dev"
+  aro_custom_domain              = "${var.cluster_name}.openshift.internal"
   aro_master_subnet_name         = "${var.master_subnet}-${var.cluster_name}"
   aro_worker_subnet_name         = "${var.worker_subnet}-${var.cluster_name}"
   aro_master_subnet_cidr         = "${var.master_subnet_cidr}"
@@ -140,7 +140,7 @@ resource "azurerm_private_dns_zone" "aro_custom_domain" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "aro_custom_domain_vnet_link" {
-  name                  = local.
+  name                  = local.aro_vnet_link
   resource_group_name   = azurerm_resource_group.aro_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.aro_custom_domain.name
   virtual_network_id    = azurerm_virtual_network.aro_vnet.id

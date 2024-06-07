@@ -1,0 +1,4 @@
+azure_resource_group: openenv-qr8rk
+privatedns_domain: aro-neu-cluster.openshift.dev
+cluster_name: aro-neu-cluster
+aro_api: https://api.agabriel-neu.northeurope.aroapp.io:6443/
