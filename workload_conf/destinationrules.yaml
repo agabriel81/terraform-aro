@@ -1,65 +1,11 @@
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
-  name: details
-  namespace: bookinfo
+  name: bluegreen-dr
+  namespace: bluegreen
 spec:
-  host: details
+  host: bluegreen
   subsets:
   - labels:
       version: v1
     name: v1
-  - labels:
-      version: v2
-    name: v2
----    
-apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
-metadata:
-  name: productpage
-  namespace: bookinfo
-spec:
-  host: productpage
-  subsets:
-  - labels:
-      version: v1
-    name: v1
----    
-apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
-metadata:
-  name: ratings
-  namespace: bookinfo
-spec:
-  host: ratings
-  subsets:
-  - labels:
-      version: v1
-    name: v1
-  - labels:
-      version: v2
-    name: v2
-  - labels:
-      version: v2-mysql
-    name: v2-mysql
-  - labels:
-      version: v2-mysql-vm
-    name: v2-mysql-vm
----    
-apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
-metadata:
-  name: reviews
-  namespace: bookinfo
-spec:
-  host: reviews
-  subsets:
-  - labels:
-      version: v1
-    name: v1
-  - labels:
-      version: v2
-    name: v2
-  - labels:
-      version: v3
-    name: v3

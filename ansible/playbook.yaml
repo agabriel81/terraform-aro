@@ -51,10 +51,35 @@
             src: ../cluster_conf/smmr.yaml
             wait: true
 
-        - name: Create BlueGreen Kube resources by reading the definition from a local file
+        - name: Create BlueGreen Roles resources by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../workload_conf/roles.yaml
+
+        - name: Create BlueGreen application resources by reading the definition from a local file
           redhat.openshift.k8s:
             state: present
             src: ../workload_conf/bluegreen.yaml
+
+        - name: Create BlueGreen Gateway resources by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../workload_conf/gateway.yaml
+
+        - name: Create BlueGreen VirtualService resources by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../workload_conf/virtualservice.yaml
+
+        - name: Create BlueGreen DestinationRule resources by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../workload_conf/destinationrules.yaml
+
+        - name: Create BlueGreen Route resources by reading the definition from a local file
+          redhat.openshift.k8s:
+            state: present
+            src: ../workload_conf/route.yaml
 
       always:
         - name: If login succeeded, try to log out (revoke access token)

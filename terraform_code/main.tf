@@ -10,6 +10,7 @@ locals {
   aro_master_subnet_cidr         = "${var.master_subnet_cidr}"
   aro_worker_subnet_cidr         = "${var.worker_subnet_cidr}"
   aro_vnet_cidr                  = "${var.vnet_cidr}"
+  aro_vnet_link                  " "${var.cluster_name}-private-dns-link"
   app_gw_cidr                    = "${var.app_gw_cidr}"
   app_gw_name                    = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-appgw"
   backend_address_pool_name      = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-beap"
@@ -136,6 +137,13 @@ resource "azurerm_redhat_openshift_cluster" "aro_cluster" {
 resource "azurerm_private_dns_zone" "aro_custom_domain" {
   name                = local.aro_custom_domain
   resource_group_name = azurerm_resource_group.aro_rg.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "aro_custom_domain_vnet_link" {
+  name                  = local.
+  resource_group_name   = azurerm_resource_group.aro_rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.aro_custom_domain.name
+  virtual_network_id    = azurerm_virtual_network.aro_vnet.id
 }
 
 resource "azurerm_subnet" "appgw_subnet" {

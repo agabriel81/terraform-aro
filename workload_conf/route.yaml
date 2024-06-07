@@ -3,15 +3,13 @@ kind: Route
 metadata:
   labels:
     app: istio-ingressgateway
-  name: trafficmanager-route
+    type: custom
+  name: bluegreen-route
   namespace: istio-system
 spec:
-  host: TM_ROUTE
+  host: bluegreen.aro-neu-cluster.openshift.dev
   port:
-    targetPort: https
-  tls:
-    insecureEdgeTerminationPolicy: None
-    termination: passthrough
+    targetPort: 8080
   to:
     kind: Service
     name: istio-ingressgateway

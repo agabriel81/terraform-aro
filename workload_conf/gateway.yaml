@@ -1,28 +1,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: bookinfo-gateway
-  namespace: bookinfo
-spec:
-  selector:
-    istio: ingressgateway
-  servers:
-  - hosts:
-    - TM_ROUTE
-    port:
-      name: https
-      number: 443
-      protocol: HTTPS
-    tls:
-      mode: SIMPLE
-      privateKey: /etc/istio/custom-certs/tls.key
-      serverCertificate: /etc/istio/custom-certs/tls.crt
----
-apiVersion: networking.istio.io/v1beta1
-kind: Gateway
-metadata:
-  name: bookinfo-gateway-check
-  namespace: bookinfo
+  name: bluegreen-gateway
+  namespace: bluegreen
 spec:
   selector:
     istio: ingressgateway
