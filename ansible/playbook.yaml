@@ -108,6 +108,50 @@
             records:
               - entry: "{{ ip[0] }}"
 
+        - name: Create instance of Application Gateway
+          azure.azcollection.azure_rm_appgateway:
+            resource_group: "{{ azure_resource_group }}"
+            name: "{{ app_gw_name }}"
+            auth_source: env
+            sku:
+              name: standard_v2
+              tier: standard_v2
+              capacity: 3
+            gateway_ip_configurations:
+              - subnet:
+                  name: "{{ subnet_name }}"
+                  virtual_network_name: "{{ aro_vnet_name }}"
+                name: "{{ app_gw_conf }}"
+            frontend_ip_configurations:
+              - public_ip_address: "{{ app_gw_pip }}"
+                name: "{{ app_gw_frontend_name }}"
+            frontend_ports:
+              - port: 80
+                name: "{{ app_gw_frontend_ports }}"
+            backend_address_pools:
+              - backend_addresses:
+                  - ip_address: "{{ ip[0] }}"
+                name: "{{ app_gw_backend_address_pool }}"
+            backend_http_settings_collection:
+              - port: 80
+                protocol: http
+                host_name: "{{ app_name }}"
+                cookie_based_affinity: disabled
+                connection_draining:
+                  drain_timeout_in_sec: 60
+                  enabled: true
+                name: "{{ app_gw_backend_settings_name }}"
+            http_listeners:
+              - frontend_ip_configuration: "{{ app_gw_frontend_name }}"
+                frontend_port: "{{ app_gw_frontend_ports }}"
+                name: "{{ app_gw_http_listener }}"
+            request_routing_rules:
+              - rule_type: basic
+                backend_address_pool: "{{ app_gw_backend_address_pool }}"
+                backend_http_settings: "{{ app_gw_backend_settings_name }}"
+                http_listener:  "{{ app_gw_http_listener }}"
+                name: "{{ app_gw_rule_name }}"
+
       always:
         - name: If login succeeded, try to log out (revoke access token)
           when: openshift_auth_results.openshift_auth.api_key is defined

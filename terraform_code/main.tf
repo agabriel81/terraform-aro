@@ -191,7 +191,7 @@ resource "azurerm_application_gateway" "aro_appgw" {
 
   backend_address_pool {
     name = local.backend_address_pool_name
-    ip_addresses = [local.aro_default_ingress_ip]
+//    ip_addresses = [local.aro_default_ingress_ip]
   }
 
   backend_http_settings {

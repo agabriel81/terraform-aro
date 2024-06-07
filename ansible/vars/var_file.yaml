@@ -2,3 +2,15 @@ azure_resource_group: openenv-qr8rk
 privatedns_domain: aro-neu-cluster.openshift.dev
 cluster_name: aro-neu-cluster
 aro_api: https://api.agabriel-neu.northeurope.aroapp.io:6443/
+app_gw_name: aro_app_gw
+app_gw_conf: gw-conf
+app_gw_frontend_name: aro-neu-cluster-feip
+app_gw_frontend_ports: 80
+app_gw_backend_address_pool: aro-neu-cluster-beap
+app_gw_backend_settings_name: aro-neu-cluster-be-htst
+app_gw_http_listener: aro-neu-cluster-httplstn
+app_gw_rule_name: aro-neu-cluster-rqrt
+app_name: bluegreen.aro-neu-cluster.openshift.dev
+subnet_name: AppGatewaySubnet
+aro_vnet_name: aro-vnet
+app_gw_pip: aro-neu-cluster-appgw-pip
