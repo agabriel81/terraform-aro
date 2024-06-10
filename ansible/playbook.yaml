@@ -127,6 +127,7 @@
 
         - name: ensure an A record set with multiple records
           azure.azcollection.azure_rm_privatednszone.azure_rm_privatednsrecordset:
+            auth_source: credential_file
             resource_group: "{{ azure_resource_group }}"
             relative_name: "*"
             zone_name: "{{ privatedns_domain }}"
