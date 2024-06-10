@@ -23,63 +23,87 @@
 
         - name: Create Projects by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../cluster_conf/projects.yaml
 
         - name: Create a IngressController by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../cluster_conf/ingresscontroller.yaml
 
         - name: Create OperatorGroups by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../cluster_conf/operatorgroup.yaml
 
         - name: Create Subscriptions by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../cluster_conf/subscriptions.yaml
 
         - name: Create ServiceMeshControlPlane by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../cluster_conf/smcp.yaml
             wait: true
 
         - name: Create ServiceMeshMemberRole by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../cluster_conf/smmr.yaml
             wait: true
 
         - name: Create BlueGreen Roles resources by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../workload_conf/roles.yaml
 
         - name: Create BlueGreen application resources by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../workload_conf/bluegreen.yaml
 
         - name: Create BlueGreen Gateway resources by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../workload_conf/gateway.yaml
 
         - name: Create BlueGreen VirtualService resources by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../workload_conf/virtualservice.yaml
 
         - name: Create BlueGreen DestinationRule resources by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../workload_conf/destinationrules.yaml
 
         - name: Create BlueGreen Route resources by reading the definition from a local file
           redhat.openshift.k8s:
+            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+            host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
             src: ../workload_conf/route.yaml
 

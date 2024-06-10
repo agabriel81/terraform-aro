@@ -54,16 +54,33 @@ $ oc login <API URL> -u kubeadmin
 ```
 
 From a configured Ansible Controller (ansible-core, python, Ansible collection installed etc), launch the `ansible/playbook.yaml` playbook.
+Clone this repository and update `ansible.cfg` data with your Ansible Hub token to complete the Ansible Controller configuration.
+A `custom_data` content was deployed in the `jumphost` host in the file `/var/lib/cloud/instance/scripts/part-001`, it's possible to review it and complete the configuration of the Ansbile Controller.
+
 Make sure to create an Ansible Vault into the file `openshift_passwords.yml` hosting the `admin` (kubeadmin for example) password for the OpenShift Cluster.
 
 ```
-$ ansible-vault create openshift_passwords.yml
+$ ansible-vault create openshift_password.yml
 [...]
 openshift_admin_password: <your password>
 $ ansible-playbook ansible/playbook.yaml
 ```
 
 The Ansible playbook will configure ARO required Operators and deploy a sample application.
+Review the `var_files.yaml` matching your ARO resources.
+
+```
+$ cd terraform-aro/ansible/vars
+$ vi var_files.yaml
+```
+
+Start the Ansible Playbook:
+
+```
+$ cd terraform-aro/ansible
+$ ansible-playbook --vault-id @prompt playbook.yaml
+```
+
 
 
 
@@ -73,11 +90,4 @@ The Ansible playbook will configure ARO required Operators and deploy a sample a
 
 REFERENCE
 
-[1] https://docs.openshift.com/gitops/1.12/understanding_openshift_gitops/about-redhat-openshift-gitops.html
-
 https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/redhat_openshift_cluster
-
-https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/traffic_manager_azure_endpoint
-
-https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources/traffic_manager_external_endpoint
-
