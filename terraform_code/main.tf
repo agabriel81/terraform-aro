@@ -10,7 +10,7 @@ locals {
   aro_master_subnet_cidr         = "${var.master_subnet_cidr}"
   aro_worker_subnet_cidr         = "${var.worker_subnet_cidr}"
   aro_vnet_cidr                  = "${var.vnet_cidr}"
-  aro_vnet_link                  " "${var.cluster_name}-private-dns-link"
+  aro_vnet_link                  = "${var.cluster_name}-private-dns-link"
   app_gw_cidr                    = "${var.app_gw_cidr}"
   app_gw_name                    = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-appgw"
   backend_address_pool_name      = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-beap"
