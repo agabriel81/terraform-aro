@@ -244,9 +244,9 @@ resource "azurerm_linux_virtual_machine" "jumphost" {
   size                = "Standard_B1s"
   custom_data         = filebase64(templatefile("/tmp/customdata.tpl",
     {
-      "subscription" = local.subscription,
-      "secret"       = local.secret,
-      "tenant"       = local.tenant
+      "subscription" = ${local.subscription},
+      "secret"       = ${local.secret},
+      "tenant"       = ${local.tenant}
     })
 
   admin_username      = "adminuser"
