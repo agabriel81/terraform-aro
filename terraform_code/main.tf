@@ -25,6 +25,7 @@ locals {
   client_id                      = "${data.azurerm_client_config.azurerm_client.client_id}"
   tenant                         = "${data.azurerm_client_config.azurerm_client.tenant_id}"
   secret                         = "${azuread_service_principal_password.azuread_sp_pwd.value}"
+}
 
 data "azurerm_client_config" "azurerm_client" {}
 
