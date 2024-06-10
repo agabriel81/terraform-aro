@@ -27,13 +27,13 @@ Start the Terraform process by passing few variables:
 ```
 $ export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
 $ export TF_VAR_cluster_domain=agabriel-ger
-$ export TF_VAR_cluster_version=4.12.25
+$ export TF_VAR_cluster_version=4.13.26
 $ export TF_VAR_location=germanywestcentral
 $ export TF_VAR_resourcegroup_name=aro-ger-agabriel
-$ export TF_VAR_cluster_name=aro-ger-cluster1
+$ export TF_VAR_cluster_name=aro-ger-cluster
 ```
 
-Check if you want to override any variable (VNET, master/worker subnet name and CIDR etc) using the override.tf_to_be_implemented example file (by renaming it override.tf)
+Check if you want to override any variable (VNET, master/worker subnet name and CIDR etc) using the `override.tf_to_be_implemented` example file (by renaming it `override.tf`)
 
 Deploy all Azure and OpenShift resources using Terraform:
 
@@ -53,8 +53,20 @@ $ az aro show -g ${TF_VAR_resourcegroup_name} -n ${TF_VAR_cluster_name} --query 
 $ oc login <API URL> -u kubeadmin
 ```
 
-From a configured Ansible Controller, launch the `ansible/playbook.yaml` playbook.
-Make sure to create an Ansible Vault into the file `openshift_passwords.yaml` hosting the `admin` password for the OpenShift Cluster.
+From a configured Ansible Controller (ansible-core, python, Ansible collection installed etc), launch the `ansible/playbook.yaml` playbook.
+Make sure to create an Ansible Vault into the file `openshift_passwords.yml` hosting the `admin` (kubeadmin for example) password for the OpenShift Cluster.
+
+```
+$ ansible-vault create openshift_passwords.yml
+[...]
+openshift_admin_password: <your password>
+$ ansible-playbook ansible/playbook.yaml
+```
+
+The Ansible playbook will configure ARO required Operators and deploy a sample application.
+
+
+
 
 
 
