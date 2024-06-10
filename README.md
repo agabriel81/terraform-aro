@@ -1,4 +1,4 @@
-# Terraforming a public Azure Red Hat OpenShift (ARO) cluster, install OpenShift ServiceMesh using OpenShift GitOps with custom CA for ServiceMesh workload by Cert-Manager Operator
+# Terraforming a private Azure Red Hat OpenShift (ARO) cluster, install OpenShift ServiceMesh control-plane and data-plane, update Azure resources using Ansible
 
 Prerequisites and versions:
 
