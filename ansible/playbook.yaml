@@ -105,7 +105,7 @@
             api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
             host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
-            src: ../workload_conf/route.yaml
+            template: ../workload_conf/route.yaml
 
         - name: Get an existing Service object
           kubernetes.core.k8s_info:
