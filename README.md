@@ -60,10 +60,11 @@ A `custom_data` content was deployed in the `jumphost` host in the file `/var/li
 Make sure to create an Ansible Vault into the file `openshift_passwords.yml` hosting the `admin` (kubeadmin for example) password for the OpenShift Cluster.
 
 ```
+$ cd terraform-aro/ansible
 $ ansible-vault create openshift_password.yml
+Vault Password:
 [...]
 openshift_admin_password: <your password>
-$ ansible-playbook ansible/playbook.yaml
 ```
 
 The Ansible playbook will configure ARO required Operators and deploy a sample application.
@@ -79,8 +80,8 @@ Start the Ansible Playbook:
 ```
 $ cd terraform-aro/ansible
 $ ansible-playbook --vault-id @prompt playbook.yaml
+Vault Password:
 ```
-
 
 
 
