@@ -55,7 +55,13 @@ $ oc login <API URL> -u kubeadmin
 
 From a configured Ansible Controller (ansible-core, python, Ansible collection installed etc), launch the `ansible/playbook.yaml` playbook.
 Clone this repository and update `ansible.cfg` data with your Ansible Hub token to complete the Ansible Controller configuration.
+
+```
+$ git clone <repo>
+```
+
 A `custom_data` content was deployed in the `jumphost` host in the file `/var/lib/cloud/instance/scripts/part-001`, it's possible to review it and complete the configuration of the Ansbile Controller.
+The Azure credentials file, which is needed for the Ansible Playbook, are placed into `~/.azure/credentials`.
 
 Make sure to create an Ansible Vault into the file `openshift_passwords.yml` hosting the `admin` (kubeadmin for example) password for the OpenShift Cluster.
 

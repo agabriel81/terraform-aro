@@ -138,7 +138,7 @@
           azure.azcollection.azure_rm_appgateway:
             resource_group: "{{ azure_resource_group }}"
             name: "{{ app_gw_name }}"
-            auth_source: env
+            auth_source: credential_file
             sku:
               name: standard_v2
               tier: standard_v2
