@@ -25,19 +25,6 @@ locals {
   client_id                      = "${data.azurerm_client_config.azurerm_client.client_id}"
   tenant                         = "${data.azurerm_client_config.azurerm_client.tenant_id}"
   secret                         = "${azuread_service_principal_password.azuread_sp_pwd.value}"
-  custom_data = <<CUSTOM_DATA
-#!/bin/bash
-sudo yum install -y ansible-core git python3-pip
-sudo pip3 install --upgrade pip
-ansible-galaxy collection install azure.azcollection
-ansible-galaxy collection install redhat.openshift
-echo "[default]"        >> ~/.azure/credentials
-echo local.subscription >> ~/.azure/credentials
-echo local.client_id    >> ~/.azure/credentials
-echo tenant             >> ~/.azure/credentials
-echo secret             >> ~/.azure/credentials
-CUSTOM_DATA
-}
 
 data "azurerm_client_config" "azurerm_client" {}
 
@@ -254,7 +241,7 @@ resource "azurerm_linux_virtual_machine" "jumphost" {
   resource_group_name = azurerm_resource_group.aro_rg.name
   location            = azurerm_resource_group.aro_rg.location
   size                = "Standard_B1s"
-  custom_data         = base64encode(local.custom_data)
+  custom_data         = filebase64("/tmp/customdata.tpl")
   admin_username      = "adminuser"
   network_interface_ids = [
     azurerm_network_interface.jumphost_nic.id,
