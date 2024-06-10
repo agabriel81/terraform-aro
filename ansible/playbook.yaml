@@ -33,7 +33,7 @@
             api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
             host: "{{ openshift_auth_results.openshift_auth.host }}"
             state: present
-            src: ../cluster_conf/ingresscontroller.yaml
+            template: ../cluster_conf/ingresscontroller.yaml
 
         - name: Create OperatorGroups by reading the definition from a local file
           redhat.openshift.k8s:

@@ -4,7 +4,7 @@ metadata:
   name: custom
   namespace: openshift-ingress-operator
 spec:
-  domain: aro-neu-cluster.openshift.internal
+  domain: {{ privatedns_domain }}
   endpointPublishingStrategy:
     loadBalancer:
       dnsManagementPolicy: Managed
