@@ -21,6 +21,22 @@ locals {
   request_routing_rule_name      = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-rqrt"
   redirect_configuration_name    = "${azurerm_redhat_openshift_cluster.aro_cluster.name}-rdrcfg"
   aro_default_ingress_ip         = "${azurerm_redhat_openshift_cluster.aro_cluster.ingress_profile[0].ip_address}"
+  subscription                   = "${data.azurerm_client_config.azurerm_client.subscription_id}"
+  client_id                      = "${data.azurerm_client_config.azurerm_client.client_id}"
+  tenant                         = "${data.azurerm_client_config.azurerm_client.tenant_id}"
+  secret                         = "${azuread_service_principal_password.azuread_sp_pwd.value}"
+  custom_data = <<CUSTOM_DATA
+#!/bin/bash
+sudo yum install -y ansible-core git python3-pip
+sudo pip3 install --upgrade pip
+ansible-galaxy collection install azure.azcollection
+ansible-galaxy collection install redhat.openshift
+echo "[default]"        >> ~/.azure/credentials
+echo local.subscription >> ~/.azure/credentials
+echo local.client_id    >> ~/.azure/credentials
+echo tenant             >> ~/.azure/credentials
+echo secret             >> ~/.azure/credentials
+CUSTOM_DATA
 }
 
 data "azurerm_client_config" "azurerm_client" {}
