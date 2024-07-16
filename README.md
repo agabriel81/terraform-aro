@@ -128,7 +128,7 @@ spec:
   source:
     path: mesh_gitops_workload/base
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: master
+    targetRevision: mtls_tempo
     kustomize:
       patches:
       - target:
