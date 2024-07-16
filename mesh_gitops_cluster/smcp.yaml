@@ -23,6 +23,20 @@ spec:
   gateways:
     egress:
       enabled: true
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: false
+          replicas: 3
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringScheduling:
+              - key: app
+                operator: In
+                topologyKey: topology.kubernetes.io/zone
+                values:
+                - istio-egressgateway
     ingress:
       enabled: true
       runtime:
