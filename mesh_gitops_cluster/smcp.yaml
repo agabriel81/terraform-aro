@@ -48,6 +48,9 @@ spec:
             enabled: false
           replicas: 3
         pod:
+          metadata:
+            labels:
+              version: v1
           affinity:
             podAntiAffinity:
               requiredDuringScheduling:
