@@ -9,6 +9,9 @@ metadata:
   name: basic
   namespace: istio-system
 spec:
+  security:
+    dataPlane:
+      mtls: true
   addons:
     grafana:
       enabled: true
