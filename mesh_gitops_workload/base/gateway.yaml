@@ -17,19 +17,3 @@ spec:
       mode: SIMPLE
       privateKey: /etc/istio/custom-certs/tls.key
       serverCertificate: /etc/istio/custom-certs/tls.crt
----
-apiVersion: networking.istio.io/v1beta1
-kind: Gateway
-metadata:
-  name: bookinfo-gateway-check
-  namespace: bookinfo
-spec:
-  selector:
-    istio: ingressgateway
-  servers:
-  - hosts:
-    - "*"
-    port:
-      name: http
-      number: 80
-      protocol: HTTP
