@@ -1,0 +1,19 @@
+apiVersion: tempo.grafana.com/v1alpha1
+kind: TempoStack
+metadata:
+  name: sample
+  namespace: tracing-system
+spec:
+  storageSize: 10Gi
+  storage:
+      secret: 
+          name: tempo-secret
+          type: azure
+  template:
+    queryFrontend:
+      jaegerQuery:
+        enabled: true
+        ingress:
+          route:
+            termination: edge
+          type: route
