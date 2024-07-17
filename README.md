@@ -93,9 +93,36 @@ The GitOps Application resources are configured with "sync-waves" to respect cre
 
 Access the OpenShift GitOps ArgoCD instance and manually sync the `mesh-cluster` Application.
 
-The ServiceMesh control plane installation will fail for the ServiceMesh IngressGateway but it's expected because it needs the custom Istio Gateway certificate which will be created in next steps.
+The ServiceMesh Control Plane is configured with MTLS enabled and it will expect a custom CA which needs to be configured via a secret:
 
-Create the CA Issuer for the `Cert-Manager` Operator, it will sign the end certificate for OpenShift ServiceMesh.
+```
+$ oc create secret generic cacerts -n istio-system --from-file=<path>/ca-cert.pem \
+    --from-file=<path>/ca-key.pem --from-file=<path>/root-cert.pem \
+    --from-file=<path>/cert-chain.pem
+```
+
+Below a snippet of the MTLS and custom CA configuration in the SMCP (ServiceMeshControlPlane) CRD:
+
+```
+  spec:
+    security:
+      dataPlane:
+        mtls: true
+    certificateAuthority:
+      type: Istiod
+      istiod:
+        type: PrivateKey
+        privateKey:
+          rootCADir: /etc/cacerts
+```
+
+You may need to restart the ServiceMesh Control Plane component:
+
+```
+$ oc -n istio-system delete pods -l 'app in (istiod,istio-ingressgateway, istio-egressgateway)'
+```
+
+Then, we can use the same custom CA to create the CA Issuer for the `Cert-Manager` Operator, it will sign the end TLS certificate for OpenShift ServiceMesh IngressGateway.
 
 Create a secret containing your custom CA and then the Cert-Manager resources. Fill the resources based on your environment:
 
