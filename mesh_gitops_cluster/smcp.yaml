@@ -12,6 +12,12 @@ spec:
   security:
     dataPlane:
       mtls: true
+    certificateAuthority:
+      type: Istiod
+      istiod:
+        type: PrivateKey
+        privateKey:
+          rootCADir: /etc/cacerts
   addons:
     grafana:
       enabled: true
