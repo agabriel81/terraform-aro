@@ -85,7 +85,4 @@ spec:
   - default
   telemetry:
     type: Istiod
-  tracing:
-    sampling: 10000
-    type: Jaeger
   version: v2.5
