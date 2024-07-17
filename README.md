@@ -3,12 +3,12 @@
 Prerequisites and versions:
 
 ```
-- Terraform (CLI): v1.8.3
-- az (CLI): 2.60.0
+- Terraform (CLI): v1.9.2
+- az (CLI): 2.62.0
 - oc (CLI): version depend on the cluster version
 ```
 ```
-- ARO: 4.12
+- ARO: 4.13
 - OpenShift GitOps: 1.12
 - OpenShift Kiali: 1.73
 - OpenShift Jaeger: 1.53
@@ -18,7 +18,7 @@ Prerequisites and versions:
 
 Clone the repository and change to repo directory:
 ```
-$ https://github.com/agabriel81/terraform-aro.git
+$ git clone https://github.com/agabriel81/terraform-aro.git
 $ cd terraform-aro/terraform-code
 ```
 
@@ -27,7 +27,7 @@ Start the Terraform process by passing few variables:
 $ export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
 $ export TF_VAR_azure_app_name=agabriel-app-aro-ita
 $ export TF_VAR_cluster_domain=agabriel-ger
-$ export TF_VAR_cluster_version=4.12.25
+$ export TF_VAR_cluster_version=4.13.40
 $ export TF_VAR_location=germanywestcentral
 $ export TF_VAR_resourcegroup_name=aro-ger-agabriel
 $ export TF_VAR_cluster_name=aro-ger-cluster1
