@@ -122,6 +122,23 @@ You may need to restart the ServiceMesh Control Plane component:
 $ oc -n istio-system delete pods -l 'app in (istiod,istio-ingressgateway, istio-egressgateway)'
 ```
 
+Let's configured the TempoStack S3 reference secret:
+
+```
+oc apply -f - << EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-test
+stringData:
+  endpoint: <Azure endpoint>
+  bucket: tempo
+  access_key_id: 
+  access_key_secret: <secret>
+type: Opaque
+EOF
+```
+
 Then, we can use the same custom CA to create the CA Issuer for the `Cert-Manager` Operator, it will sign the end TLS certificate for OpenShift ServiceMesh IngressGateway.
 
 Create a secret containing your custom CA and then the Cert-Manager resources. Fill the resources based on your environment:
