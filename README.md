@@ -129,11 +129,12 @@ oc apply -f - << EOF
 apiVersion: v1
 kind: Secret
 metadata:
-  name: minio-test
+  name: azure-storage-secret
+  namespace: tracing-system
 stringData:
   endpoint: <Azure endpoint>
   bucket: tempo
-  access_key_id: 
+  access_key_id: <id>
   access_key_secret: <secret>
 type: Opaque
 EOF
