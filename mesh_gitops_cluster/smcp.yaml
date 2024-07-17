@@ -9,6 +9,15 @@ metadata:
   name: basic
   namespace: istio-system
 spec:
+  meshConfig:
+    extensionProviders:
+      - name: tempo
+        zipkin:
+          service: tempo-sample-distributor.tracing-system.svc.cluster.local
+          port: 9411
+  tracing:
+    sampling: 10000
+    type: None 
   security:
     dataPlane:
       mtls: true
