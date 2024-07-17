@@ -7,7 +7,7 @@ spec:
   storageSize: 10Gi
   storage:
       secret: 
-          name: tempo-secret
+          name: azure-storage-secret
           type: azure
   template:
     queryFrontend:
