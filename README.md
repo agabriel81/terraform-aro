@@ -6,12 +6,13 @@ Prerequisites and versions:
 - Terraform (CLI): v1.9.2
 - az (CLI): 2.62.0
 - oc (CLI): version depend on the cluster version
+- custom rootCA certificate and key
 ```
 ```
 - ARO: 4.13
-- OpenShift GitOps: 1.12
+- OpenShift GitOps: 1.13
 - OpenShift Kiali: 1.73
-- OpenShift Jaeger: 1.53
+- OpenShift TempoStack: 2.4
 - OpenShift ServiceMesh: 2.5
 - OpenShift Cert-Manager: 1.12
 ```
