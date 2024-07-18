@@ -55,7 +55,7 @@ $ oc login <API URL> -u kubeadmin
 
 Access the ARO console and **install the OpenShift GitOps** using the official documentation [1] (version 1.12 at the time of writing).
 
-Create a GitOps application for installating the Cert-manager, Kiali, Jaeger and ServiceMesh Operators, with ServiceMeshControlPlane and ServiceMeshMemberRoll CRDs pointing the `mesh_gitops_cluster` directory of this repository. 
+Create a GitOps application for installating the Cert-Manager, Kiali, Tempo and ServiceMesh Operators, with ServiceMeshControlPlane and ServiceMeshMemberRoll CRDs pointing the `mesh_gitops_cluster` directory of this repository. 
 
 This process requires `cluster-admin` permissions to the `openshift-gitops-argocd-application-controller` ServiceAccount:
 
