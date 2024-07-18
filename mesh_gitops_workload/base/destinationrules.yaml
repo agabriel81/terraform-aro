@@ -63,3 +63,14 @@ spec:
   - labels:
       version: v3
     name: v3
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: to-tracing-system
+  namespace: bookinfo
+spec:
+  host: '*.tracing-system.svc.cluster.local'
+  trafficPolicy:
+    tls:
+      mode: DISABLE
