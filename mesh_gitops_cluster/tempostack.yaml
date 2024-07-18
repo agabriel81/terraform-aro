@@ -12,6 +12,8 @@ spec:
       secret: 
           name: azure-storage-secret
           type: azure
+      tls:
+        caName: cacert
   template:
     queryFrontend:
       jaegerQuery:
