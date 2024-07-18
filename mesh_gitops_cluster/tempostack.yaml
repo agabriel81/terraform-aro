@@ -7,13 +7,11 @@ metadata:
   name: sample
   namespace: tracing-system
 spec:
-  storageSize: 10Gi
+  storageSize: 1Gi
   storage:
       secret: 
           name: azure-storage-secret
           type: azure
-      tls:
-        caName: cacert
   template:
     queryFrontend:
       jaegerQuery:
