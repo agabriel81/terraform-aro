@@ -132,10 +132,10 @@ metadata:
   name: azure-storage-secret
   namespace: tracing-system
 stringData:
-  endpoint: <Azure endpoint>
-  bucket: tempo
-  access_key_id: <id>
-  access_key_secret: <secret>
+  name: <name>
+  container: <Azure container blob name>
+  account_name: <Azure storage account name>
+  account_key: <key content>
 type: Opaque
 EOF
 ```
@@ -215,7 +215,7 @@ The repository will configure a passthrough OpenShift Route for exposing our $TF
 
 The application should expose a certificate signed by our custom CA with a 2h duration.
 
-The certificate will be automatically renewed by OpenShift Cert-Manager Operator
+The certificate will be automatically renewed by the OpenShift Cert-Manager Operator
 
 
 
