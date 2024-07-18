@@ -7,3 +7,4 @@ resources:
 - gateway.yaml
 - passthrough_route.yaml
 - destinationrules.yaml
+- peerauthentication.yaml
