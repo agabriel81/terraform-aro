@@ -3,7 +3,7 @@ kind: Subscription
 metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "2"
   labels:
     operators.coreos.com/kiali-ossm.openshift-operators: ""
   name: kiali-ossm
