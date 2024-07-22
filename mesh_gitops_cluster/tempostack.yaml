@@ -1,0 +1,22 @@
+apiVersion: tempo.grafana.com/v1alpha1
+kind: TempoStack
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "6"
+  name: sample
+  namespace: tracing-system
+spec:
+  storageSize: 1Gi
+  storage:
+      secret: 
+          name: azure-storage-secret
+          type: azure
+  template:
+    queryFrontend:
+      jaegerQuery:
+        enabled: true
+        ingress:
+          route:
+            termination: edge
+          type: route

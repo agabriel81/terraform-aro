@@ -3,22 +3,23 @@
 Prerequisites and versions:
 
 ```
-- Terraform (CLI): v1.8.3
-- az (CLI): 2.60.0
+- Terraform (CLI): v1.9.2
+- az (CLI): 2.62.0
 - oc (CLI): version depend on the cluster version
+- custom rootCA certificate and key
 ```
 ```
-- ARO: 4.12
-- OpenShift GitOps: 1.12
+- ARO: 4.13
+- OpenShift GitOps: 1.13
 - OpenShift Kiali: 1.73
-- OpenShift Jaeger: 1.53
+- OpenShift TempoStack: 2.4
 - OpenShift ServiceMesh: 2.5
 - OpenShift Cert-Manager: 1.12
 ```
 
 Clone the repository and change to repo directory:
 ```
-$ https://github.com/agabriel81/terraform-aro.git
+$ git clone https://github.com/agabriel81/terraform-aro.git
 $ cd terraform-aro/terraform-code
 ```
 
@@ -27,7 +28,7 @@ Start the Terraform process by passing few variables:
 $ export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
 $ export TF_VAR_azure_app_name=agabriel-app-aro-ita
 $ export TF_VAR_cluster_domain=agabriel-ger
-$ export TF_VAR_cluster_version=4.12.25
+$ export TF_VAR_cluster_version=4.13.40
 $ export TF_VAR_location=germanywestcentral
 $ export TF_VAR_resourcegroup_name=aro-ger-agabriel
 $ export TF_VAR_cluster_name=aro-ger-cluster1
@@ -54,7 +55,7 @@ $ oc login <API URL> -u kubeadmin
 
 Access the ARO console and **install the OpenShift GitOps** using the official documentation [1] (version 1.12 at the time of writing).
 
-Create a GitOps application for installating the Cert-manager, Kiali, Jaeger and ServiceMesh Operators, with ServiceMeshControlPlane and ServiceMeshMemberRoll CRDs pointing the `mesh_gitops_cluster` directory of this repository. 
+Create a GitOps application for installating the Cert-Manager, Kiali, Tempo and ServiceMesh Operators, with ServiceMeshControlPlane and ServiceMeshMemberRoll CRDs pointing the `mesh_gitops_cluster` directory of this repository. 
 
 This process requires `cluster-admin` permissions to the `openshift-gitops-argocd-application-controller` ServiceAccount:
 
@@ -76,7 +77,7 @@ spec:
   source:
     path: mesh_gitops_cluster
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: master
+    targetRevision: mtls_tempo
   sources: []
   project: default
   syncPolicy:
@@ -93,9 +94,54 @@ The GitOps Application resources are configured with "sync-waves" to respect cre
 
 Access the OpenShift GitOps ArgoCD instance and manually sync the `mesh-cluster` Application.
 
-The ServiceMesh control plane installation will fail for the ServiceMesh IngressGateway but it's expected because it needs the custom Istio Gateway certificate which will be created in next steps.
+The ServiceMesh Control Plane is configured with MTLS enabled and it will expect a custom CA which needs to be configured via a secret:
 
-Create the CA Issuer for the `Cert-Manager` Operator, it will sign the end certificate for OpenShift ServiceMesh.
+```
+$ oc create secret generic cacerts -n istio-system --from-file=<path>/ca-cert.pem \
+    --from-file=<path>/ca-key.pem --from-file=<path>/root-cert.pem \
+    --from-file=<path>/cert-chain.pem
+```
+
+Below a snippet of the MTLS and custom CA configuration in the SMCP (ServiceMeshControlPlane) CRD:
+
+```
+  spec:
+    security:
+      dataPlane:
+        mtls: true
+    certificateAuthority:
+      type: Istiod
+      istiod:
+        type: PrivateKey
+        privateKey:
+          rootCADir: /etc/cacerts
+```
+
+You may need to restart the ServiceMesh Control Plane component:
+
+```
+$ oc -n istio-system delete pods -l 'app in (istiod,istio-ingressgateway, istio-egressgateway)'
+```
+
+Let's configured the TempoStack S3 reference secret:
+
+```
+oc apply -f - << EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-storage-secret
+  namespace: tracing-system
+stringData:
+  name: <name>
+  container: <Azure container blob name>
+  account_name: <Azure storage account name>
+  account_key: <key content>
+type: Opaque
+EOF
+```
+
+Then, we can use the same custom CA to create the CA Issuer for the `Cert-Manager` Operator, it will sign the end TLS certificate for OpenShift ServiceMesh IngressGateway.
 
 Create a secret containing your custom CA and then the Cert-Manager resources. Fill the resources based on your environment:
 
@@ -128,7 +174,7 @@ spec:
   source:
     path: mesh_gitops_workload/base
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: master
+    targetRevision: mtls_tempo
     kustomize:
       patches:
       - target:
@@ -170,7 +216,7 @@ The repository will configure a passthrough OpenShift Route for exposing our $TF
 
 The application should expose a certificate signed by our custom CA with a 2h duration.
 
-The certificate will be automatically renewed by OpenShift Cert-Manager Operator
+The certificate will be automatically renewed by the OpenShift Cert-Manager Operator
 
 
 

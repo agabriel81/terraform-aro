@@ -3,19 +3,33 @@ kind: ServiceMeshControlPlane
 metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
   - maistra.io/istio-operator
   name: basic
   namespace: istio-system
 spec:
+  meshConfig:
+    extensionProviders:
+      - name: tempo
+        zipkin:
+          service: tempo-sample-distributor.tracing-system.svc.cluster.local
+          port: 9411
+  tracing:
+    sampling: 10000
+    type: None 
+  security:
+    dataPlane:
+      mtls: true
+    certificateAuthority:
+      type: Istiod
+      istiod:
+        type: PrivateKey
+        privateKey:
+          rootCADir: /etc/cacerts
   addons:
     grafana:
       enabled: true
-    jaeger:
-      install:
-        storage:
-          type: Memory
     kiali:
       enabled: true
     prometheus:
@@ -23,6 +37,20 @@ spec:
   gateways:
     egress:
       enabled: true
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: false
+          replicas: 3
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringScheduling:
+              - key: app
+                operator: In
+                topologyKey: topology.kubernetes.io/zone
+                values:
+                - istio-egressgateway
     ingress:
       enabled: true
       runtime:
@@ -31,6 +59,9 @@ spec:
             enabled: false
           replicas: 3
         pod:
+          metadata:
+            labels:
+              version: v1
           affinity:
             podAntiAffinity:
               requiredDuringScheduling:
@@ -54,7 +85,4 @@ spec:
   - default
   telemetry:
     type: Istiod
-  tracing:
-    sampling: 10000
-    type: Jaeger
   version: v2.5

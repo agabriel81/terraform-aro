@@ -1,0 +1,18 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: tempo-tracing-mtls-disable
+  namespace: tracing-system
+spec:
+  mtls:
+    mode: PERMISSIVE
+  portLevelMtls:
+    "9411":
+      mode: DISABLE
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: distributor
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/managed-by: tempo-operator
+      app.kubernetes.io/name: tempo
+      tempo-gossip-member: "true"

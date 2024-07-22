@@ -2,7 +2,6 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: details
-  namespace: bookinfo
 spec:
   host: details
   subsets:
@@ -17,7 +16,6 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: productpage
-  namespace: bookinfo
 spec:
   host: productpage
   subsets:
@@ -29,7 +27,6 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: ratings
-  namespace: bookinfo
 spec:
   host: ratings
   subsets:
@@ -50,7 +47,6 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: reviews
-  namespace: bookinfo
 spec:
   host: reviews
   subsets:
@@ -63,3 +59,13 @@ spec:
   - labels:
       version: v3
     name: v3
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: to-tracing-system
+spec:
+  host: '*.tracing-system.svc.cluster.local'
+  trafficPolicy:
+    tls:
+      mode: DISABLE

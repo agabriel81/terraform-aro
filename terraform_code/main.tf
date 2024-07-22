@@ -137,6 +137,20 @@ resource "azurerm_traffic_manager_external_endpoint" "aro-tm-endpoint" {
   target               = azurerm_redhat_openshift_cluster.aro-cluster.ingress_profile.0.ip_address
 }
 
+resource "azurerm_storage_account" "storageaccount" {
+  name                = "tempostackstorageaccount"
+  resource_group_name = azurerm_resource_group.aro_rg.name
+  location                 = azurerm_resource_group.aro_rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  }
+
+resource "azurerm_storage_container" "container" {
+  name                  = "tempostack"
+  storage_account_name  = azurerm_storage_account.storageaccount.name
+  container_access_type = "container"
+}
+
 output "console_url" {
   value = azurerm_redhat_openshift_cluster.aro-cluster.console_url
 }
