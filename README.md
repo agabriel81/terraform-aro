@@ -44,7 +44,8 @@ $ terraform plan
 $ terraform apply 
 ```
 
-After completing the installation, retrieve ARO credentials, ARO console and ARO API URL:
+After completing the installation, all the Azure requirements will be created, including the StorageAccount and the Container which will be used for the TempoStack configuration.
+Let's retrieve ARO credentials, ARO console and ARO API URL:
 
 ```
 $ az aro list-credentials --name ${TF_VAR_cluster_name} --resource-group ${TF_VAR_resourcegroup_name}
@@ -123,7 +124,8 @@ You may need to restart the ServiceMesh Control Plane component:
 $ oc -n istio-system delete pods -l 'app in (istiod,istio-ingressgateway, istio-egressgateway)'
 ```
 
-Let's configured the TempoStack S3 reference secret:
+Let's configured the TempoStack S3 reference secret.
+It's possible to recover the `account_name`, `container` and `account_key` from the Azure console or CLI.
 
 ```
 oc apply -f - << EOF
