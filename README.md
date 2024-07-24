@@ -157,6 +157,22 @@ $ oc create -f /tmp/certificate.yaml
 
 The OpenShift ServiceMesh Istio Gateway is already configured for mounting a custom certificate and it's needed to restart the Istio Gateway pod to mount the newly created custom certificate, signed by your custom CA and saved into the secret `istio-ingressgateway-custom-certs`
 
+Let's integrate Kiali with Tempostack with the following configuration:
+
+```
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+# ...
+spec:
+  external_services:
+    tracing:
+      query_timeout: 30
+      enabled: true
+      in_cluster_url: 'http://tempo-sample-query-frontend.tracing-system.svc.cluster.local:16685'
+      url: '[Tempo query frontend Route url]'
+      use_grpc: true
+```
+
 And finally, let's deploy some workload into the ServiceMesh using the infamous `bookinfo` application.
 
 We will use Kustomize with an inline patch to configure the Azure Traffic Manager DNS name.
