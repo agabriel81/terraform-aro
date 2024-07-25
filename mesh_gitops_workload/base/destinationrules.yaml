@@ -69,7 +69,7 @@ spec:
   trafficPolicy:
     tls:
       mode: DISABLE
-      ---
+---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
