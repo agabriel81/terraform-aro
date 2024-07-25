@@ -69,3 +69,14 @@ spec:
   trafficPolicy:
     tls:
       mode: DISABLE
+      ---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: to-tracing-system
+  namespace: istio-system
+spec:
+  host: '*.tracing-system.svc.cluster.local'
+  trafficPolicy:
+    tls:
+      mode: DISABLE
