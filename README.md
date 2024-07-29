@@ -359,3 +359,5 @@ https://cloud.redhat.com/experts/aro/clf-to-azure/
 
 https://docs.openshift.com/container-platform/4.13/service_mesh/v2x/ossm-observability.html#ossm-configuring-distr-tracing-tempo_observability
 
+https://docs.openshift.com/container-platform/4.13/observability/distr_tracing/distr_tracing_tempo/distr-tracing-tempo-installing.html
+
