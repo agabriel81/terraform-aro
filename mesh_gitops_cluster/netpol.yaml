@@ -5,6 +5,7 @@ metadata:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     argocd.argoproj.io/sync-wave: "7"
   name: tracing-route
+  namespace: tracing-system
 spec:
   ingress:
   - {}
