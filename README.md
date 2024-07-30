@@ -103,10 +103,24 @@ oc create secret generic cacerts -n istio-system --from-file=<path>/ca-cert.pem 
     --from-file=<path>/cert-chain.pem
 ```
 
-Below a snippet of the MTLS and custom CA configuration in the SMCP (ServiceMeshControlPlane) CRD:
+Below a snippet of the MTLS and custom CA configuration in the SMCP (ServiceMeshControlPlane) CRD along with Tracing integration and accessLogging enabled:
 
 ```
   spec:
+    proxy:
+      accessLogging:
+        file:
+          format: "[%START_TIME%] \"%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%\" %RESPONSE_CODE% %RESPONSE_FLAGS% %RESPONSE_CODE_DETAILS% %CONNECTION_TERMINATION_DETAILS% \"%UPSTREAM_TRANSPORT_FAILURE_REASON%\" %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% \"%REQ(X-FORWARDED-FOR)%\" \"%REQ(USER-AGENT)%\" \"%REQ(X-REQUEST-ID)%\" \"%REQ(:AUTHORITY)%\" \"%UPSTREAM_HOST%\" %UPSTREAM_CLUSTER% %UPSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_REMOTE_ADDRESS% %REQUESTED_SERVER_NAME% %ROUTE_NAME% DURATION --> %DURATION% \n"
+          name: /dev/stdout
+    meshConfig:
+      extensionProviders:
+        - name: tempo
+          zipkin:
+            service: tempo-sample-distributor.tracing-system.svc.cluster.local
+            port: 9411
+    tracing:
+      sampling: 10000
+      type: None 
     security:
       dataPlane:
         mtls: true
