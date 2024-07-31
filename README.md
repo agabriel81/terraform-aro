@@ -375,3 +375,5 @@ https://docs.openshift.com/container-platform/4.13/service_mesh/v2x/ossm-observa
 
 https://docs.openshift.com/container-platform/4.13/observability/distr_tracing/distr_tracing_tempo/distr-tracing-tempo-installing.html
 
+https://docs.openshift.com/container-platform/4.13/service_mesh/v2x/ossm-security.html#ossm-cert-manage-add-cert-key_ossm-security
+
