@@ -46,7 +46,7 @@ spec:
         deployment:
           autoScaling:
             enabled: false
-          replicas: 3
+          replicas: 1
         pod:
           affinity:
             podAntiAffinity:
@@ -62,7 +62,7 @@ spec:
         deployment:
           autoScaling:
             enabled: false
-          replicas: 3
+          replicas: 1
         pod:
           metadata:
             labels:
