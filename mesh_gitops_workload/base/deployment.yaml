@@ -22,7 +22,7 @@ spec:
       labels:
         app: spring-petclinic
         version: v1
-      annotations:v
+      annotations:
         sidecar.istio.io/inject: 'true'
     spec:
       containers:
