@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: bookinfo-gateway
+  name: petclinic-gateway
   namespace: istio-system
 spec:
   selector:
