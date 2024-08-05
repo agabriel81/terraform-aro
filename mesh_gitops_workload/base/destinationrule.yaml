@@ -3,7 +3,7 @@ kind: DestinationRule
 metadata:
   name: petclinic
 spec:
-  host: sping-petclinic
+  host: spring-petclinic
   subsets:
   - labels:
       version: v1

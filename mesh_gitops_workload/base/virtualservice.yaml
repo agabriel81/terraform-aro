@@ -8,10 +8,7 @@ spec:
   hosts:
   - TM_ROUTE
   http:
-  - match:
-    - uri:
-        exact: /
-    route:
+  - route:
     - destination:
         host: spring-petclinic
         port:
