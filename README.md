@@ -78,7 +78,7 @@ spec:
   source:
     path: mesh_gitops_cluster
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: mtls_tempo_logs_fw
+    targetRevision: mtls_tempo_logs_fw_petclinic
   sources: []
   project: default
   syncPolicy:
@@ -201,12 +201,12 @@ metadata:
   namespace: openshift-gitops
 spec:
   destination:
-    namespace: 'bookinfo'
+    namespace: 'petclinic'
     server: 'https://kubernetes.default.svc'
   source:
     path: mesh_gitops_workload/base
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: mtls_tempo_logs_fw
+    targetRevision: mtls_tempo_logs_fw_petclinic
     kustomize:
       patches:
       - target:
@@ -218,14 +218,14 @@ spec:
             value: $TF_VAR_tm_route
       - target:
           kind: Gateway
-          name: bookinfo-gateway
+          name: petclinic-gateway
         patch: |-
           - op: replace
             path: /spec/servers/0/hosts/0
             value: $TF_VAR_tm_route
       - target:
           kind: VirtualService
-          name: bookinfo
+          name: petclinic
         patch: |-
           - op: replace
             path: /spec/hosts/0
