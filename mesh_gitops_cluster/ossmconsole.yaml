@@ -1,0 +1,8 @@
+apiVersion: kiali.io/v1alpha1
+kind: OSSMConsole
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "5"
+  namespace: openshift-operators
+  name: ossmconsole
