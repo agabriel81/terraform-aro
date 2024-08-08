@@ -359,6 +359,79 @@ aro_application_logs_CL
    | count 
 ~~~
 
+Let's try out some AuthorizationPolicy and test the results for each policy both on the Kiali Console and in the OpenShift ServiceMesh console plugin.
+
+Allow-nothing policy:
+
+~~~
+cat <<EOF | oc apply -f -
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+ name: allow-nothing
+ namespace: bookinfo
+spec:
+  {}
+EOF
+~~~
+
+Allow only traffic from ingressgateway to the bookinfo application:
+
+~~~
+cat <<EOF | oc apply -f -
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-from-ingressgateway
+  namespace: bookinfo
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+    - source:
+        namespaces: ["istio-system"]
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/*"]
+    - operation:
+        methods: ["POST"]
+        paths: ["/*"]
+EOF
+~~~
+
+Allow all internal traffic throughout bookinfo microservices:
+
+~~~
+cat <<EOF | oc apply -f -
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-bookinfo-internal
+  namespace: bookinfo
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/bookinfo/sa/bookinfo*"]
+    - source:
+        namespaces: ["bookinfo"]    
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/*"]
+    - operation:
+        methods: ["POST"]
+        paths: ["/*"]
+EOF
+~~~
+
+Troubleshooting a specific log/trace by extracting the ID of the Azure LogAnalytics log and find it in the traces with `guid:x-request-id` filter in the Jaeger UI.
+
+
 REFERENCE
 
 [1] https://docs.openshift.com/gitops/1.13/understanding_openshift_gitops/about-redhat-openshift-gitops.html
