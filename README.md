@@ -78,7 +78,7 @@ spec:
   source:
     path: mesh_gitops_cluster
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: mtls_tempo_logs_fw_authw
+    targetRevision: mtls_tempo_logs_fw_auth
   sources: []
   project: default
   syncPolicy:
