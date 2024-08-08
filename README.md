@@ -1,6 +1,6 @@
 # Terraforming a public Azure Red Hat OpenShift (ARO) cluster, install OpenShift ServiceMesh using OpenShift GitOps with custom CA for ServiceMesh workload by Cert-Manager Operator
 
-Prerequisites and versions:
+# 1. Prerequisites and versions
 
 ```
 - Terraform (CLI): v1.9.2
@@ -22,6 +22,8 @@ Clone the repository and change to repo directory:
 $ git clone https://github.com/agabriel81/terraform-aro.git
 $ cd terraform-aro/terraform-code
 ```
+
+# 2. Installation
 
 Start the Terraform process by passing few variables:
 ```
@@ -53,6 +55,8 @@ az aro show --name ${TF_VAR_cluster_name} --resource-group ${TF_VAR_resourcegrou
 az aro show -g ${TF_VAR_resourcegroup_name} -n ${TF_VAR_cluster_name} --query apiserverProfile.url -o tsv 
 oc login $(az aro show -g ${TF_VAR_resourcegroup_name} -n ${TF_VAR_cluster_name} --query apiserverProfile.url -o tsv) -u kubeadmin
 ```
+
+# 3. Operators installation via GitOps
 
 Access the ARO console and **install the OpenShift GitOps** using the official documentation [1] (version 1.12 at the time of writing).
 
@@ -176,7 +180,7 @@ Let's integrate Kiali with Tempostack with the following configuration:
 ```
 apiVersion: kiali.io/v1alpha1
 kind: Kiali
-# ...
+[...]
 spec:
   external_services:
     tracing:
@@ -186,6 +190,8 @@ spec:
       url: '[Tempo query frontend Route url]'
       use_grpc: true
 ```
+
+# 4. ServiceMesh workload deployment
 
 Let's continue by deploying some workload into the ServiceMesh using the infamous `bookinfo` application.
 
@@ -250,7 +256,9 @@ The application should expose a certificate signed by our custom CA with a 2h du
 
 The certificate will be automatically renewed by the OpenShift Cert-Manager Operator.
 
-And, finally, let's configure our environment to ship logs (both Infrastructure and Application logs) to an Azure Log Analitics Workplace.
+# 5. Observability part
+
+Let's configure our environment to ship logs (both Infrastructure and Application logs) to an Azure Log Analitics Workplace.
 
 1. Set some environment variables:
 
@@ -359,9 +367,11 @@ aro_application_logs_CL
    | count 
 ~~~
 
+# 6. ServiceMesh security with AuthorizationPolicy
+
 Let's try out some AuthorizationPolicy and test the results for each policy both on the Kiali Console and in the OpenShift ServiceMesh console plugin.
 
-Allow-nothing policy:
+1. Allow-nothing policy:
 
 ~~~
 cat <<EOF | oc apply -f -
@@ -375,7 +385,7 @@ spec:
 EOF
 ~~~
 
-Allow only traffic from ingressgateway to the bookinfo application:
+2. Allow only traffic from ingressgateway to the bookinfo application:
 
 ~~~
 cat <<EOF | oc apply -f -
@@ -402,7 +412,7 @@ spec:
 EOF
 ~~~
 
-Allow all internal traffic throughout bookinfo microservices:
+3. Allow all internal traffic throughout bookinfo microservices:
 
 ~~~
 cat <<EOF | oc apply -f -
@@ -429,7 +439,7 @@ spec:
 EOF
 ~~~
 
-Troubleshooting a specific log/trace by extracting the ID of the Azure LogAnalytics log and find it in the traces with `guid:x-request-id` filter in the Jaeger UI.
+Troubleshoot a specific log/trace by extracting the ID of the Azure LogAnalytics log and find it in the traces with `guid:x-request-id` filter in the Jaeger UI.
 
 
 REFERENCE
