@@ -13,7 +13,7 @@
 - OpenShift GitOps: 1.13
 - OpenShift Kiali: 1.73
 - OpenShift TempoStack: 2.4
-- OpenShift ServiceMesh: 2.5
+- OpenShift ServiceMesh: 2.6
 - OpenShift Cert-Manager: 1.12
 ```
 
@@ -82,7 +82,7 @@ spec:
   source:
     path: mesh_gitops_cluster
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: mtls_tempo_logs_fw_auth
+    targetRevision: mtls_tempo_logs_fw_auth_2_6
   sources: []
   project: default
   syncPolicy:
@@ -212,7 +212,7 @@ spec:
   source:
     path: mesh_gitops_workload/base
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: mtls_tempo_logs_fw_auth
+    targetRevision: mtls_tempo_logs_fw_auth_2_6
     kustomize:
       patches:
       - target:
