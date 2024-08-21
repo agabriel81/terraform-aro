@@ -4,7 +4,7 @@ metadata:
   name: bookinfo
 spec:
   gateways:
-  - istio-system/bookinfo-gateway
+  - istio-ingress/bookinfo-gateway
   hosts:
   - TM_ROUTE
   http:
