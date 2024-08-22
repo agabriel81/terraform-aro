@@ -52,5 +52,5 @@ spec:
   - default
   telemetry:
     type: Istiod
-  version: v2.6
+  version: v2.5
   mode: ClusterWide
