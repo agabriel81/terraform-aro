@@ -9,7 +9,7 @@
 - custom rootCA certificate and key
 ```
 ```
-- ARO: 4.13
+- ARO: 4.14
 - OpenShift GitOps: 1.13
 - OpenShift Kiali: 1.73
 - OpenShift TempoStack: 2.4
@@ -30,7 +30,7 @@ Start the Terraform process by passing few variables:
 export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
 export TF_VAR_azure_app_name=agabriel-app-aro-neu
 export TF_VAR_cluster_domain=agabriel-neu
-export TF_VAR_cluster_version=4.13.40
+export TF_VAR_cluster_version=4.14.16
 export TF_VAR_location=northeurope
 export TF_VAR_resourcegroup_name=aro-neu-agabriel
 export TF_VAR_cluster_name=aro-neu-cluster1
