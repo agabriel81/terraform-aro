@@ -16,10 +16,10 @@ spec:
         name: /dev/stdout
   meshConfig:
     extensionProviders:
-      - name: tempo
-        zipkin:
-          service: tempo-sample-distributor.tracing-system.svc.cluster.local
-          port: 9411
+      - name: otel
+        opentelemetry:
+          service: otel-collector.bookinfo.svc.cluster.local
+          port: 4317
   tracing:
     sampling: 10000
     type: None 
@@ -34,11 +34,11 @@ spec:
           rootCADir: /etc/cacerts
   addons:
     grafana:
-      enabled: true
+      enabled: false
     kiali:
       enabled: true
     prometheus:
-      enabled: true
+      enabled: false
   gateways:
     egress:
       enabled: false
@@ -52,5 +52,5 @@ spec:
   - default
   telemetry:
     type: Istiod
-  version: v2.5
+  version: v2.6
   mode: ClusterWide

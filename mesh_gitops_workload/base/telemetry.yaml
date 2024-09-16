@@ -6,5 +6,5 @@ metadata:
 spec:
   tracing:
   - providers:
-    - name: tempo
+    - name: otel
     randomSamplingPercentage: 100
