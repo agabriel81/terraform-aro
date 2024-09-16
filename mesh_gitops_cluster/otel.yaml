@@ -23,6 +23,7 @@ spec:
     service:
       pipelines:
         traces:
-          receivers: [otlp]
-          processors: []
-          exporters: [otlp]
+          receivers: 
+            - otlp
+          exporters: 
+            - otlp
