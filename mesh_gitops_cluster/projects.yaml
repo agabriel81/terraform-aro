@@ -15,6 +15,17 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     argocd.argoproj.io/sync-wave: "-1"
+  name: openshift-opentelemetry-operator
+spec:
+  finalizers:
+    - kubernetes
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "-1"
   name: istio-otel
 spec:
   finalizers:
