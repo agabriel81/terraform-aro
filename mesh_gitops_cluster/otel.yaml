@@ -17,13 +17,13 @@ spec:
             endpoint: 0.0.0.0:4317
     exporters:
       otlp:
-        endpoint: 'tempo-sample-distributor.tracing-system.svc.cluster.local:4317'
+        endpoint: tempo-sample-distributor.tracing-system.svc.cluster.local:4317
         tls:
           insecure: true
     service:
       pipelines:
         traces:
-          receivers: 
-            - otlp
           exporters: 
+            - otlp
+          receivers: 
             - otlp
