@@ -212,7 +212,7 @@ spec:
   source:
     path: mesh_gitops_workload/base
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: mtls_tempo_logs_fw_auth_2_6
+    targetRevision: mtls_tempo_logs_fw_auth_26
     kustomize:
       patches:
       - target:
@@ -399,9 +399,9 @@ spec:
   rules:
   - from:
     - source:
-        principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+        principals: ["cluster.local/ns/istio-ingress/sa/default"]
     - source:
-        namespaces: ["istio-system"]
+        namespaces: ["istio-ingress"]
     to:
     - operation:
         methods: ["GET"]
