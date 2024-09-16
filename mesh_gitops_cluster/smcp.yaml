@@ -20,8 +20,6 @@ spec:
         opentelemetry:
           service: otel-collector.bookinfo.svc.cluster.local
           port: 4317
-      - name: prometheus
-        prometheus: {}
   tracing:
     sampling: 10000
     type: None 
@@ -40,7 +38,7 @@ spec:
     kiali:
       enabled: true
     prometheus:
-      enabled: false
+      enabled: true
   gateways:
     egress:
       enabled: false

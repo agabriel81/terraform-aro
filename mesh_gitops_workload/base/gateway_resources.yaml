@@ -27,6 +27,8 @@ spec:
   selector:
     matchLabels:
       istio: ingressgateway
+      app: istio-ingressgateway
+      version: v1
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -39,6 +41,8 @@ spec:
       labels:
         istio: ingressgateway
         sidecar.istio.io/inject: "true"
+        app: istio-ingressgateway
+        version: v1
     spec:
       affinity:
         podAntiAffinity:
