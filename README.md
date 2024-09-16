@@ -82,7 +82,7 @@ spec:
   source:
     path: mesh_gitops_cluster
     repoURL: 'https://github.com/agabriel81/terraform-aro.git'
-    targetRevision: mtls_tempo_logs_fw_auth_2_6
+    targetRevision: mtls_tempo_logs_fw_auth_26
   sources: []
   project: default
   syncPolicy:
@@ -118,10 +118,10 @@ Below a snippet of the MTLS and custom CA configuration in the SMCP (ServiceMesh
           name: /dev/stdout
     meshConfig:
       extensionProviders:
-        - name: tempo
-          zipkin:
-            service: tempo-sample-distributor.tracing-system.svc.cluster.local
-            port: 9411
+        - name: otel
+          opentelemetry:
+            port: 4317
+            service: otel-collector.bookinfo.svc.cluster.local
     tracing:
       sampling: 10000
       type: None 
