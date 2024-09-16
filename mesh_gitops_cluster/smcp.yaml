@@ -18,7 +18,7 @@ spec:
     extensionProviders:
       - name: otel
         opentelemetry:
-          service: otel-collector.istio-otel.svc.cluster.local
+          service: otel-collector.bookinfo.svc.cluster.local
           port: 4317
       - name: prometheus
         prometheus: {}

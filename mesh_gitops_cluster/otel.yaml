@@ -2,7 +2,7 @@ apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
   name: otel
-  namespace: istio-otel
+  namespace: bookinfo
   annotations:
     sidecar.istio.io/inject: 'true' 
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
