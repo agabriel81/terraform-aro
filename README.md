@@ -139,8 +139,14 @@ Below a snippet of the MTLS and custom CA configuration in the SMCP (ServiceMesh
 You may need to restart the ServiceMesh Control Plane component:
 
 ```
-oc -n istio-system delete pods -l 'app in (istiod,istio-ingressgateway, istio-egressgateway)'
+oc -n istio-system delete pods -l 'app in (istiod)'
 ```
+
+To check the certificates in use in the ServiceMesh, it's possible to see them in the Kiali console, under the Envoy configs or by running a command similar to the following one:
+
+~~~
+oc exec $(oc get pod -l app=productpage -n bookinfo -o jsonpath=‘{.items[]..metadata.name}') -c istio-proxy -n bookinfo -- openssl s_client -showcerts -connect $(oc get svc ratings -n bookinfo -o jsonpath={.spec.clusterIP}):9080
+~~~
 
 Let's configured the TempoStack S3 reference secret.
 It's possible to recover the `account_name`, `container` and `account_key` from the Azure console or CLI.
