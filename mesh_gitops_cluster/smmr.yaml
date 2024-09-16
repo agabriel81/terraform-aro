@@ -10,6 +10,6 @@ metadata:
   namespace: istio-system
 spec:
   members:
-  - istio-otel
+  - tracing-system
   - istio-ingress
   - bookinfo
