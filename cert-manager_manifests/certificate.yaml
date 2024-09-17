@@ -7,8 +7,8 @@ spec:
   isCA: false
   commonName: 'site.example.com' 
   secretName: istio-ingressgateway-custom-certs
-  duration: 2h
-  renewBefore: 1h
+  duration: 61m
+  renewBefore: 60m
   dnsNames:
   - "site.example.com" 
   issuerRef:
