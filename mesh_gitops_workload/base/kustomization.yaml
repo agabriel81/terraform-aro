@@ -9,3 +9,4 @@ resources:
 - destinationrules.yaml
 - telemetry.yaml
 - gateway_resources.yaml
+- otel.yaml
