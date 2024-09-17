@@ -258,7 +258,7 @@ Access the OpenShift GitOps ArgoCD instance and sync the `mesh-workload` Applica
 
 The repository will configure a passthrough OpenShift Route for exposing our $TF_VAR_tm_route/productpage endpoint, served by an Azure Traffic Manager component.
 
-The application should expose a certificate signed by our custom CA with a 2h duration.
+The application should expose a certificate signed by our custom CA with a 61m duration.
 
 The certificate will be automatically renewed by the OpenShift Cert-Manager Operator.
 
@@ -460,9 +460,11 @@ https://registry.terraform.io/providers/hashicorp/azurerm/3.102.0/docs/resources
 
 https://cloud.redhat.com/experts/aro/clf-to-azure/
 
-https://docs.openshift.com/container-platform/4.13/service_mesh/v2x/ossm-observability.html#ossm-configuring-distr-tracing-tempo_observability
+https://docs.openshift.com/container-platform/4.14/service_mesh/v2x/ossm-observability.html#ossm-configuring-distr-tracing-tempo_observability
 
-https://docs.openshift.com/container-platform/4.13/observability/distr_tracing/distr_tracing_tempo/distr-tracing-tempo-installing.html
+https://docs.openshift.com/container-platform/4.14/observability/distr_tracing/distr_tracing_tempo/distr-tracing-tempo-installing.html
 
-https://docs.openshift.com/container-platform/4.13/service_mesh/v2x/ossm-security.html#ossm-cert-manage-add-cert-key_ossm-security
+https://docs.openshift.com/container-platform/4.14/service_mesh/v2x/ossm-security.html#ossm-security-enabling-strict-mtls_ossm-security
+ 
+https://docs.openshift.com/container-platform/4.14/security/cert_manager_operator/index.html#cert-manager-issuer-types_cert-manager-operator-about
 
