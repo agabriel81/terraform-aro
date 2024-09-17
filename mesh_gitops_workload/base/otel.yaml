@@ -23,7 +23,7 @@ spec:
     service:
       pipelines:
         traces:
-          exporters: 
+          exporters:
             - otlp
-          receivers: 
+          receivers:
             - otlp
