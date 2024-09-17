@@ -33,6 +33,10 @@ spec:
   source: redhat-operators
   sourceNamespace: openshift-marketplace
   startingCSV: kiali-operator.v1.73.7
+  config:
+    env:
+      - name: OSSMC_SKIP_VERSION_CHECK
+        value: true
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
