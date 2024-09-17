@@ -36,7 +36,7 @@ spec:
   config:
     env:
       - name: OSSMC_SKIP_VERSION_CHECK
-        value: true
+        value: "true"
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
