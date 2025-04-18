@@ -43,7 +43,7 @@ resource "azuread_service_principal" "azuread_sp" {
 
 resource "azuread_service_principal_password" "azuread_sp_pwd" {
   service_principal_id = azuread_service_principal.azuread_sp.object_id
-  end_date             = "2024-12-31T23:59:59Z"     
+  end_date             = "2025-12-31T23:59:59Z"     
 }
 
 data "azuread_service_principal" "redhatopenshift" {
