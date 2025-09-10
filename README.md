@@ -20,6 +20,7 @@ $ cd terraform-aro/terraform-code
 Start the Terraform process by passing few variables:
 ```
 $ export TF_VAR_pull_secret='{"auths":{"arosvc.azurecr.io....'
+$ export TF_VAR_azure_app_name=agabriel-app-aro-eus
 $ export TF_VAR_cluster_domain=agabriel-eus
 $ export TF_VAR_cluster_version=4.17.27
 $ export TF_VAR_location=eastus
