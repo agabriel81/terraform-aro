@@ -41,6 +41,3 @@ variable "cluster_version" {
     type = string
 }
 
-variable "tm_route" {
-    type = string
-}
