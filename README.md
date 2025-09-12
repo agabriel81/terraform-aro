@@ -1,4 +1,4 @@
-# Terraforming a public Azure Red Hat OpenShift (ARO) cluster, install OpenShift ServiceMesh using OpenShift GitOps with custom CA for ServiceMesh workload by Cert-Manager Operator
+# Terraforming a public naked Azure Red Hat OpenShift (ARO) cluster
 
 Prerequisites and versions:
 
